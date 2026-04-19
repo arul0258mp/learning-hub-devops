@@ -1,0 +1,46 @@
+# =========================
+# Node.js Dependencies
+# =========================
+node_modules/
+backend/node_modules/
+
+# =========================
+# Environment Variables (Secrets)
+# =========================
+.env
+backend/.env
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Editor / IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Terraform (State & Cache ONLY)
+# =========================
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+
+# =========================
+# Build / Temp Files
+# =========================
+dist/
+build/
+tmp/
+temp/

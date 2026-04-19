@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Bot AI Assistant — Learn Smarter with AI</title>
+  <meta name="description" content="Study Bot AI Assistant — an AI-powered learning platform with structured courses, intelligent chatbot tutoring, and personalized explanations for beginners." />
+  <link rel="stylesheet" href="css/design-system.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="landing-nav" id="landingNav" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo" aria-label="Study Bot AI Home">
+    <div class="logo-icon" aria-hidden="true">🤖</div>
+    <span>Study Bot <span class="text-accent">AI</span></span>
+  </a>
+
+  <ul class="nav-links" role="list">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#footer">Contact</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-outline" id="loginNavBtn">Log In</a>
+    <a href="login.html" class="btn btn-primary cta-link" id="signupNavBtn">Get Started →</a>
+  </div>
+
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
+  <a href="#features">Features</a>
+  <a href="#about">About</a>
+  <a href="#courses">Courses</a>
+  <a href="login.html" class="btn btn-primary cta-link">Get Started →</a>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" aria-labelledby="heroTitle">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge badge-accent">✨ AI-Powered Learning</span>
+    </div>
+
+    <h1 class="hero-title font-heading" id="heroTitle">
+      Study Bot<br />
+      <span class="gradient-text">AI Assistant</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Learn smarter with AI-powered guidance. Structured courses, intelligent tutoring,
+      and personalized explanations — all in one platform.
+    </p>
+
+    <div class="hero-actions">
+      <a href="login.html" class="btn btn-primary btn-lg cta-link" id="heroCtaBtn">
+        🚀 Start Learning Free
+      </a>
+      <a href="#about" class="btn btn-outline btn-lg">
+        See How It Works
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-value">3+</span>
+        <span class="stat-label">Courses</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-item">
+        <span class="stat-value">AI</span>
+        <span class="stat-label">Tutor Mode</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-item">
+        <span class="stat-value">Free</span>
+        <span class="stat-label">To Start</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-item">
+        <span class="stat-value">24/7</span>
+        <span class="stat-label">Available</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator" aria-hidden="true">
+    <span>Scroll</span>
+    <span class="scroll-arrow">↓</span>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="features-section" id="features" aria-labelledby="featuresTitle">
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">⚡ Features</span>
+      <h2 class="section-title font-heading" id="featuresTitle">
+        Everything You Need to<br /><span class="gradient-text">Learn Effectively</span>
+      </h2>
+      <p class="section-desc">
+        A complete AI learning ecosystem designed to accelerate your understanding and retention.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <article class="feature-card glass-card animate-on-scroll">
+        <div class="feature-icon" aria-hidden="true">🤖</div>
+        <h3 class="feature-title">AI Chat Tutor</h3>
+        <p class="feature-desc">Ask any question, get instant, context-aware explanations powered by Google Gemini AI. Your personal tutor, available 24/7.</p>
+      </article>
+
+      <article class="feature-card glass-card animate-on-scroll">
+        <div class="feature-icon" aria-hidden="true">📚</div>
+        <h3 class="feature-title">Structured Courses</h3>
+        <p class="feature-desc">AWS Cloud, C Programming, and Data Analysis — organized into digestible subtopics with rich, detailed content.</p>
+      </article>
+
+      <article class="feature-card glass-card animate-on-scroll">
+        <div class="feature-icon" aria-hidden="true">🎛️</div>
+        <h3 class="feature-title">Dynamic Layout Modes</h3>
+        <p class="feature-desc">Switch between Full Learning, Focus, and Chat modes. Customize your workspace with intelligent toggle controls.</p>
+      </article>
+
+      <article class="feature-card glass-card animate-on-scroll">
+        <div class="feature-icon" aria-hidden="true">💡</div>
+        <h3 class="feature-title">Context-Aware AI</h3>
+        <p class="feature-desc">The AI always knows which course and subtopic you're studying, delivering laser-focused explanations without generic answers.</p>
+      </article>
+
+      <article class="feature-card glass-card animate-on-scroll">
+        <div class="feature-icon" aria-hidden="true">📊</div>
+        <h3 class="feature-title">Progress Tracking</h3>
+        <p class="feature-desc">Save your progress, mark topics complete, and pick up exactly where you left off — across all your devices.</p>
+      </article>
+
+      <article class="feature-card glass-card animate-on-scroll">
+        <div class="feature-icon" aria-hidden="true">🚀</div>
+        <h3 class="feature-title">Beginner Friendly</h3>
+        <p class="feature-desc">No prior experience required. Every concept is explained with clarity, analogies, and practical code examples.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section class="section" id="about" aria-labelledby="aboutTitle">
+  <div class="about-inner">
+    <!-- Visual mockup -->
+    <div class="about-visual animate-on-scroll">
+      <div class="about-mockup">
+        <div class="mockup-bar" aria-hidden="true">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+        </div>
+        <div class="mockup-content">
+          <div class="mockup-line accent"></div>
+          <div class="mockup-line long"></div>
+          <div class="mockup-line med"></div>
+          <div class="mockup-line short"></div>
+          <div style="height:8px"></div>
+          <div class="mockup-line long"></div>
+          <div class="mockup-line med"></div>
+          <div class="mockup-line long"></div>
+          <div style="height:8px"></div>
+          <!-- Mini chat UI -->
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <div style="flex:1;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:8px">
+              <div class="mockup-line short" style="margin-bottom:4px"></div>
+              <div class="mockup-line med"></div>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px">
+              <div class="mockup-line short" style="margin-bottom:4px"></div>
+              <div class="mockup-line long"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="glass-card about-float">
+        <span style="font-size:1.3rem">🤖</span>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600">AI Tutor Active</div>
+          <div style="font-size:0.72rem;color:var(--accent)">● Context-aware</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="about-text animate-on-scroll">
+      <span class="section-tag">📖 About the Platform</span>
+      <h2 class="section-title font-heading" id="aboutTitle">
+        Learning Through AI,<br /><span class="gradient-text">Designed for Everyone</span>
+      </h2>
+      <p class="section-desc">
+        Study Bot AI combines structured course content with an intelligent chatbot that adapts to what you're currently learning — giving you the right explanation at the right time.
+      </p>
+
+      <div class="about-points">
+        <div class="about-point">
+          <div class="about-point-icon" aria-hidden="true">📑</div>
+          <div class="about-point-text">
+            <h4>Structured Course Learning</h4>
+            <p>Organized topics with clear progression. Learn one concept at a time.</p>
+          </div>
+        </div>
+        <div class="about-point">
+          <div class="about-point-icon" aria-hidden="true">🤖</div>
+          <div class="about-point-text">
+            <h4>AI Doubt Clarification</h4>
+            <p>Stuck on a concept? Ask the AI and get a clear, topic-aware explanation instantly.</p>
+          </div>
+        </div>
+        <div class="about-point">
+          <div class="about-point-icon" aria-hidden="true">🌱</div>
+          <div class="about-point-text">
+            <h4>Beginner-Friendly System</h4>
+            <p>No prior knowledge needed. Start from zero and build confidence step by step.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COURSES PREVIEW ===================== -->
+<section class="courses-section section" id="courses" aria-labelledby="coursesTitle">
+  <div class="section-header">
+    <span class="section-tag">🎓 Courses</span>
+    <h2 class="section-title font-heading" id="coursesTitle">
+      Start with <span class="gradient-text">Three Powerful Courses</span>
+    </h2>
+    <p class="section-desc">Hand-crafted content designed to build real-world skills from the ground up.</p>
+  </div>
+
+  <div class="courses-preview">
+    <article class="course-preview-card glass-card animate-on-scroll" data-course="aws" style="--gradient:linear-gradient(90deg,#FF9900,#ff6600)" tabindex="0" role="button" aria-label="Start AWS Cloud course">
+      <span class="course-emoji" aria-hidden="true">☁️</span>
+      <h3>AWS Cloud Fundamentals</h3>
+      <p>Master Amazon Web Services — EC2, S3, Lambda, IAM, VPC, and cloud architecture principles.</p>
+      <div class="course-meta">
+        <span>⏱️ 8 hours</span>
+        <span>📚 6 topics</span>
+        <span class="badge badge-accent">Beginner</span>
+      </div>
+    </article>
+
+    <article class="course-preview-card glass-card animate-on-scroll" data-course="c" style="--gradient:linear-gradient(90deg,#1a6fff,#4eccf5)" tabindex="0" role="button" aria-label="Start C Programming course">
+      <span class="course-emoji" aria-hidden="true">💻</span>
+      <h3>C Programming Mastery</h3>
+      <p>Learn systems programming — data types, pointers, memory management, and functions from scratch.</p>
+      <div class="course-meta">
+        <span>⏱️ 10 hours</span>
+        <span>📚 5 topics</span>
+        <span class="badge badge-accent">Beginner</span>
+      </div>
+    </article>
+
+    <article class="course-preview-card glass-card animate-on-scroll" data-course="eda" style="--gradient:linear-gradient(90deg,#6366f1,#a855f7)" tabindex="0" role="button" aria-label="Start Data Analysis course">
+      <span class="course-emoji" aria-hidden="true">📊</span>
+      <h3>Data Analysis & EDA</h3>
+      <p>Explore datasets with Python — descriptive statistics, visualization, missing data, and outlier detection.</p>
+      <div class="course-meta">
+        <span>⏱️ 9 hours</span>
+        <span>📚 5 topics</span>
+        <span class="badge" style="background:rgba(168,85,247,0.12);color:#a855f7;border:1px solid rgba(168,85,247,0.3)">Intermediate</span>
+      </div>
+    </article>
+  </div>
+
+  <div style="text-align:center;margin-top:var(--space-2xl)">
+    <a href="login.html" class="btn btn-primary btn-lg cta-link">Explore All Courses →</a>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer id="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:var(--space-md)">
+          <div class="logo-icon" aria-hidden="true">🤖</div>
+          <span>Study Bot <span class="text-accent">AI</span></span>
+        </div>
+        <p>An AI-powered learning platform built to help beginners master technology through structured courses and intelligent tutoring.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Twitter">𝕏</a>
+          <a href="#" class="social-link" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-link" aria-label="GitHub">⌘</a>
+          <a href="#" class="social-link" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#courses">Courses</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="login.html">Sign Up Free</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Courses</h4>
+        <ul>
+          <li><a href="learn.html?course=aws">AWS Cloud</a></li>
+          <li><a href="learn.html?course=c">C Programming</a></li>
+          <li><a href="learn.html?course=eda">Data Analysis</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">support@studybot.ai</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 Study Bot AI Assistant. Built with ❤️ and AI.</span>
+      <span>Made for learners everywhere 🌍</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script src="js/landing.js"></script>
+</body>
+</html>

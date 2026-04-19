@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Study Bot AI Assistant</title>
+  <meta name="description" content="Sign in or create your free account on Study Bot AI Assistant to start learning with AI-powered tutoring." />
+  <link rel="stylesheet" href="css/design-system.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />
+</head>
+<body>
+
+<a href="index.html" class="auth-back" aria-label="Back to home">
+  ← Back to Home
+</a>
+
+<div class="auth-glow-left" aria-hidden="true"></div>
+
+<main class="auth-page" id="authPage">
+
+  <div class="glass-card auth-card" role="main">
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-icon" aria-hidden="true">🤖</div>
+      <span>Study Bot <span class="text-accent">AI</span></span>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+      <button class="auth-tab active" id="loginTab" role="tab" aria-selected="true" aria-controls="loginForm">
+        Log In
+      </button>
+      <button class="auth-tab" id="signupTab" role="tab" aria-selected="false" aria-controls="signupForm">
+        Sign Up
+      </button>
+    </div>
+
+    <!-- ==================== LOGIN FORM ==================== -->
+    <form class="auth-form" id="loginForm" novalidate aria-labelledby="loginTab">
+      <h2 style="font-family:var(--font-heading);font-size:1.4rem;font-weight:700;margin-bottom:var(--space-sm)">
+        Welcome back 👋
+      </h2>
+      <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:var(--space-md)">
+        Sign in to continue your learning journey.
+      </p>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="loginEmail">Email Address</label>
+        <div class="input-wrapper">
+          <span class="input-icon" aria-hidden="true">✉️</span>
+          <input type="email" id="loginEmail" class="input-field" placeholder="you@example.com"
+                 autocomplete="email" spellcheck="false" />
+        </div>
+        <span class="form-error" id="loginEmailError" role="alert"></span>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon" aria-hidden="true">🔒</span>
+          <input type="password" id="loginPassword" class="input-field has-toggle"
+                 placeholder="Enter your password" autocomplete="current-password" />
+          <button type="button" class="input-toggle" id="toggleLoginPass" aria-label="Toggle password visibility">👁️</button>
+        </div>
+        <span class="form-error" id="loginPassError" role="alert"></span>
+      </div>
+
+      <!-- Options -->
+      <div class="form-options">
+        <label class="form-check">
+          <input type="checkbox" id="rememberMe" />
+          Remember me
+        </label>
+        <a href="#" class="form-link" id="forgotLink">Forgot password?</a>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-primary auth-submit" id="loginSubmit">
+        Log In →
+      </button>
+
+      <!-- Divider -->
+      <div class="auth-divider">Or continue with</div>
+
+      <!-- Social -->
+      <div class="social-btns">
+        <button type="button" class="social-btn" aria-label="Continue with Google">
+          <span class="social-icon">🌐</span> Google
+        </button>
+        <button type="button" class="social-btn" aria-label="Continue with GitHub">
+          <span class="social-icon">⌘</span> GitHub
+        </button>
+      </div>
+    </form>
+
+    <!-- ==================== SIGNUP FORM ==================== -->
+    <form class="auth-form hidden" id="signupForm" novalidate aria-labelledby="signupTab">
+      <h2 style="font-family:var(--font-heading);font-size:1.4rem;font-weight:700;margin-bottom:var(--space-sm)">
+        Create your account 🚀
+      </h2>
+      <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:var(--space-md)">
+        Join Study Bot AI and start learning for free.
+      </p>
+
+      <!-- Name -->
+      <div class="form-group">
+        <label class="form-label" for="signupName">Full Name</label>
+        <div class="input-wrapper">
+          <span class="input-icon" aria-hidden="true">👤</span>
+          <input type="text" id="signupName" class="input-field" placeholder="John Doe"
+                 autocomplete="name" />
+        </div>
+        <span class="form-error" id="signupNameError" role="alert"></span>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="signupEmail">Email Address</label>
+        <div class="input-wrapper">
+          <span class="input-icon" aria-hidden="true">✉️</span>
+          <input type="email" id="signupEmail" class="input-field" placeholder="you@example.com"
+                 autocomplete="email" spellcheck="false" />
+        </div>
+        <span class="form-error" id="signupEmailError" role="alert"></span>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label" for="signupPassword">Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon" aria-hidden="true">🔒</span>
+          <input type="password" id="signupPassword" class="input-field has-toggle"
+                 placeholder="Create a strong password" autocomplete="new-password" />
+          <button type="button" class="input-toggle" id="toggleSignupPass" aria-label="Toggle password visibility">👁️</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="strength-label"><span id="strengthLabel"></span></div>
+        <span class="form-error" id="signupPassError" role="alert"></span>
+      </div>
+
+      <!-- Confirm -->
+      <div class="form-group">
+        <label class="form-label" for="signupConfirm">Confirm Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon" aria-hidden="true">🔑</span>
+          <input type="password" id="signupConfirm" class="input-field"
+                 placeholder="Repeat your password" autocomplete="new-password" />
+        </div>
+        <span class="form-error" id="signupConfirmError" role="alert"></span>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-primary auth-submit" id="signupSubmit">
+        Create Account →
+      </button>
+
+      <p class="auth-terms">
+        By signing up, you agree to our
+        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </p>
+    </form>
+  </div>
+</main>
+
+<!-- ==================== FORGOT PASSWORD MODAL ==================== -->
+<div class="forgot-modal" id="forgotModal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+  <div class="forgot-modal-overlay" id="forgotOverlay"></div>
+  <div class="glass-card forgot-modal-card">
+    <button class="forgot-close" id="forgotClose" aria-label="Close modal">✕</button>
+    <h3 id="forgotTitle" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:var(--space-sm)">
+      Reset Password 🔑
+    </h3>
+    <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:var(--space-xl);line-height:1.6">
+      Enter your email and we'll send you a reset link.
+    </p>
+    <form id="forgotForm" novalidate>
+      <div class="form-group" style="margin-bottom:var(--space-lg)">
+        <label class="form-label" for="forgotEmail">Email Address</label>
+        <div class="input-wrapper">
+          <span class="input-icon" aria-hidden="true">✉️</span>
+          <input type="email" id="forgotEmail" class="input-field" placeholder="you@example.com" />
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%" id="forgotSubmit">
+        Send Reset Link →
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Study Bot AI Assistant</title>
+  <meta name="description" content="Choose your course and track your learning progress on Study Bot AI Assistant." />
+  <link rel="stylesheet" href="css/design-system.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />
+</head>
+<body>
+
+<div class="dashboard-layout" id="dashLayout">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="dashboard-sidebar" id="dashSidebar" role="navigation" aria-label="Sidebar navigation">
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon" aria-hidden="true">🤖</div>
+      <span>Study Bot <span class="text-accent">AI</span></span>
+    </div>
+
+    <!-- Profile -->
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar user-initials" aria-hidden="true">U</div>
+      <div>
+        <div class="sidebar-user-name user-name-display">Loading…</div>
+        <div class="sidebar-user-role">Learner</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Menu</div>
+
+      <button class="sidebar-nav-item active" aria-label="Dashboard">
+        <span class="nav-item-icon" aria-hidden="true">🏠</span>
+        Dashboard
+      </button>
+      <button class="sidebar-nav-item" aria-label="My Courses">
+        <span class="nav-item-icon" aria-hidden="true">📚</span>
+        My Courses
+        <span class="nav-item-badge">3</span>
+      </button>
+      <button class="sidebar-nav-item" aria-label="Progress">
+        <span class="nav-item-icon" aria-hidden="true">📊</span>
+        Progress
+      </button>
+
+      <div class="sidebar-section-label" style="margin-top:var(--space-md)">Account</div>
+
+      <button class="sidebar-nav-item" aria-label="Profile settings">
+        <span class="nav-item-icon" aria-hidden="true">👤</span>
+        Profile
+      </button>
+      <button class="sidebar-nav-item" aria-label="Settings">
+        <span class="nav-item-icon" aria-hidden="true">⚙️</span>
+        Settings
+      </button>
+    </nav>
+
+    <!-- Logout -->
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn" aria-label="Log out">
+        <span aria-hidden="true">🚪</span>
+        Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="dashboard-main">
+
+    <!-- Top Navbar -->
+    <header class="dashboard-navbar" role="banner">
+      <div class="navbar-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar" aria-expanded="false">
+          ☰
+        </button>
+        <span class="navbar-greeting" id="greetingName" aria-live="polite">Loading…</span>
+      </div>
+
+      <div class="navbar-right">
+        <div class="navbar-search" role="search">
+          <span aria-hidden="true">🔍</span>
+          <input type="text" id="dashSearch" placeholder="Search courses…" aria-label="Search courses" />
+        </div>
+        <button class="notif-btn" aria-label="Notifications">
+          🔔
+          <span class="notif-dot" aria-label="New notifications"></span>
+        </button>
+        <div class="navbar-avatar user-initials" role="img" aria-label="User avatar" tabindex="0">U</div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="dashboard-content" id="dashContent">
+
+      <!-- Welcome Banner -->
+      <section class="welcome-banner" aria-labelledby="welcomeHeading">
+        <h1 id="welcomeHeading">Ready to learn something new today?</h1>
+        <p>Pick up where you left off or explore a new course.</p>
+        <div class="welcome-stats">
+          <div class="welcome-stat">📚 <span>3</span> courses available</div>
+          <div class="welcome-stat">🤖 <span>AI</span> tutor included</div>
+          <div class="welcome-stat">⚡ <span>Free</span> to start</div>
+        </div>
+      </section>
+
+      <!-- Course Cards -->
+      <section aria-labelledby="coursesHeading">
+        <div class="dash-section-header">
+          <h2 id="coursesHeading">Your Courses</h2>
+          <a href="#" aria-label="View all courses">View all →</a>
+        </div>
+        <div class="courses-grid" id="coursesGrid" role="list" aria-label="Available courses">
+          <!-- Rendered by dashboard.js -->
+          <div style="grid-column:1/-1;text-align:center;padding:var(--space-2xl);color:var(--text-muted)">
+            <div class="spinner" style="margin:0 auto var(--space-md)"></div>
+            Loading courses…
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Activity -->
+      <section aria-labelledby="activityHeading" style="margin-top:var(--space-2xl)">
+        <div class="dash-section-header">
+          <h2 id="activityHeading">Recent Activity</h2>
+          <a href="#" aria-label="View all activity">View all →</a>
+        </div>
+        <div class="activity-list" id="activityList" role="list" aria-label="Recent learning activity">
+          <!-- Rendered by dashboard.js -->
+        </div>
+      </section>
+
+    </main>
+  </div><!-- /dashboard-main -->
+</div><!-- /dashboard-layout -->
+
+<script src="js/app.js"></script>
+<script src="data/courses.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

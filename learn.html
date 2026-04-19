@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning — Study Bot AI Assistant</title>
+  <meta name="description" content="Interactive AI-powered learning interface with dynamic layout modes, subtopics panel, content area, and AI chatbot tutor." />
+  <link rel="stylesheet" href="css/design-system.css" />
+  <link rel="stylesheet" href="css/learn.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />
+</head>
+<body>
+
+<div class="learn-page" id="learnPage">
+
+  <!-- ========================================================
+       TOP BAR
+  ======================================================== -->
+  <header class="learn-topbar" role="banner">
+
+    <!-- Back -->
+    <a href="dashboard.html" class="topbar-back" id="topbarBack" aria-label="Back to dashboard">
+      ← Back
+    </a>
+
+    <!-- Course + Topic info -->
+    <div class="topbar-course-info" aria-live="polite">
+      <div class="topbar-course-icon" id="topbarCourseIcon" aria-hidden="true">☁️</div>
+      <span class="topbar-course-name" id="topbarCourseName">Course</span>
+      <span class="topbar-sep" aria-hidden="true">›</span>
+      <span class="topbar-topic" id="topbarTopic">Topic</span>
+    </div>
+
+    <!-- ---- TOGGLE CONTROLS ---- -->
+    <div class="topbar-toggles" role="group" aria-label="Layout controls">
+
+      <!-- Subtopics Toggle -->
+      <div class="toggle-group" id="subtopicsToggleGroup" title="Toggle subtopics panel">
+        <label class="toggle-switch" aria-label="Show subtopics panel">
+          <input type="checkbox" id="subtopicsToggle" checked />
+          <span class="toggle-slider"></span>
+        </label>
+        <span>📑 Subtopics</span>
+      </div>
+
+      <!-- Chatbot Toggle -->
+      <div class="toggle-group" id="chatbotToggleGroup" title="Toggle AI chatbot">
+        <label class="toggle-switch" aria-label="Show AI chatbot panel">
+          <input type="checkbox" id="chatbotToggle" checked />
+          <span class="toggle-slider"></span>
+        </label>
+        <span>🤖 Chatbot</span>
+      </div>
+
+      <!-- Mode Indicator -->
+      <div class="mode-badge" aria-live="polite" aria-label="Current layout mode">
+        <span aria-hidden="true">⚡</span>
+        <span id="modeName">Full Mode</span>
+      </div>
+    </div>
+
+    <!-- Right actions -->
+    <div class="topbar-right">
+      <button class="topbar-save" id="saveBtn" aria-label="Save progress">
+        💾 <span>Save</span>
+      </button>
+      <button class="topbar-save" id="settingsBtn" aria-label="Configure AI key" title="Set Gemini API Key">
+        🔑 <span>API Key</span>
+      </button>
+      <div class="topbar-avatar" id="topbarAvatar" role="img" aria-label="User avatar">U</div>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       LEARN BODY — 3-PANEL LAYOUT
+  ======================================================== -->
+  <div class="learn-body" id="learnBody">
+
+    <!-- ================================================
+         LEFT PANEL: SUBTOPICS
+    ================================================ -->
+    <aside class="subtopics-panel" id="subtopicsPanel" role="complementary" aria-label="Course subtopics">
+
+      <div class="subtopics-header">
+        <h3>Topics</h3>
+        <span class="badge badge-accent" id="topicsCount" aria-label="Number of topics"></span>
+      </div>
+
+      <!-- Search within topics -->
+      <div class="subtopics-search" role="search">
+        <input type="text" id="subtopicSearch" placeholder="🔍 Filter topics…" aria-label="Filter subtopics" />
+      </div>
+
+      <!-- Topics List -->
+      <div class="subtopics-list" id="subtopicsList" role="list" aria-label="Subtopics list">
+        <!-- Rendered by learn.js -->
+      </div>
+    </aside>
+
+    <!-- ================================================
+         CENTER PANEL: CONTENT
+    ================================================ -->
+    <main class="content-panel" id="contentPanel" role="main" aria-label="Course content">
+
+      <div class="content-inner" id="contentInner">
+
+        <!-- Breadcrumb -->
+        <nav class="content-breadcrumb" aria-label="Breadcrumb">
+          <a href="dashboard.html">Dashboard</a>
+          <span class="crumb-sep" aria-hidden="true">›</span>
+          <span id="breadcrumbCourse">Course</span>
+          <span class="crumb-sep" aria-hidden="true">›</span>
+          <span id="breadcrumbTopic">Topic</span>
+        </nav>
+
+        <!-- Content Header -->
+        <div class="content-header">
+          <div class="content-course-tag" id="contentCourseTag" aria-label="Course name"></div>
+          <h1 class="content-title font-heading" id="contentTitle">Loading…</h1>
+          <div class="content-meta">
+            <div class="content-meta-item">
+              <span aria-hidden="true">⏱️</span>
+              <span id="readTimeDisplay">— min read</span>
+            </div>
+            <div class="content-meta-item">
+              <span aria-hidden="true">🤖</span>
+              AI-enhanced
+            </div>
+            <div class="content-meta-item">
+              <span aria-hidden="true">📖</span>
+              Beginner friendly
+            </div>
+          </div>
+        </div>
+
+        <!-- Article body -->
+        <div class="content-body" id="contentBody" aria-live="polite">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Key Points Card -->
+        <div class="key-points" role="region" aria-label="Key points">
+          <div class="key-points-title">
+            <span aria-hidden="true">🔑</span> Key Takeaways
+          </div>
+          <ul id="keyPointsList" aria-label="Key points list">
+            <!-- Rendered dynamically -->
+          </ul>
+        </div>
+
+        <!-- Ask about this topic -->
+        <div class="content-ask-bar" role="region" aria-label="Suggested questions">
+          <span class="ask-label">💡 Ask AI:</span>
+          <div class="suggested-questions" id="suggestedQuestions" role="list" aria-label="Suggested questions">
+            <!-- Rendered dynamically -->
+          </div>
+          <button class="ask-btn" id="askTopicBtn" aria-label="Ask AI about this topic">
+            🤖 Ask StudyBot
+          </button>
+        </div>
+
+        <!-- Prev / Next navigation -->
+        <div class="content-nav" aria-label="Topic navigation">
+          <button class="content-nav-btn" id="prevTopicBtn" aria-label="Previous topic">
+            ← Previous
+          </button>
+          <button class="content-nav-btn next" id="nextTopicBtn" aria-label="Next topic">
+            Next Topic →
+          </button>
+        </div>
+
+      </div><!-- /content-inner -->
+    </main>
+
+    <!-- ================================================
+         RIGHT PANEL: CHATBOT
+    ================================================ -->
+    <aside class="chatbot-panel" id="chatbotPanel" role="complementary" aria-label="AI chatbot tutor">
+
+      <!-- Header -->
+      <div class="chatbot-header">
+        <div class="chatbot-avatar" aria-hidden="true">🤖</div>
+        <div class="chatbot-info">
+          <div class="chatbot-name">StudyBot AI</div>
+          <div class="chatbot-status">
+            <div class="status-dot" aria-hidden="true"></div>
+            Context-aware · Gemini AI
+          </div>
+        </div>
+        <button class="chatbot-context-btn" id="clearChatBtn" aria-label="Clear chat history" title="Clear conversation">
+          🗑 Clear
+        </button>
+      </div>
+
+      <!-- Context bar -->
+      <div class="chatbot-context-bar" role="status" aria-live="polite" aria-label="Current AI context">
+        📍 Context: <span id="chatContextSpan">Loading…</span>
+      </div>
+
+      <!-- API Key warning -->
+      <div class="chatbot-api-warning hidden" id="apiWarning" role="alert" tabindex="0"
+           title="Click to set up your API key">
+        ⚠️ No API key set — click here to add your Gemini key
+      </div>
+
+      <!-- Messages -->
+      <div class="chatbot-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat messages">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Input Area -->
+      <div class="chatbot-input-area">
+        <div class="chatbot-input-row">
+          <textarea
+            id="chatInput"
+            class="chatbot-textarea"
+            rows="1"
+            placeholder="Ask anything about this topic…"
+            aria-label="Type your question"
+            maxlength="2000"
+          ></textarea>
+          <button class="chatbot-send" id="chatSend" aria-label="Send message" title="Send (Enter)">
+            ➤
+          </button>
+        </div>
+
+        <!-- Quick hint chips -->
+        <div class="chatbot-hints" id="chatHints" role="list" aria-label="Quick questions">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </aside><!-- /chatbot-panel -->
+
+  </div><!-- /learn-body -->
+
+</div><!-- /learn-page -->
+
+<!-- ========================================================
+     API KEY MODAL
+======================================================== -->
+<div class="api-modal" id="apiModal" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
+  <div class="api-modal-overlay" id="apiModalOverlay"></div>
+  <div class="glass-card api-modal-card">
+    <button class="api-modal-close" id="apiModalClose" aria-label="Close modal">✕</button>
+
+    <div style="font-size:2rem;margin-bottom:var(--space-md)" aria-hidden="true">🔑</div>
+    <h3 id="apiModalTitle">Set Your Gemini API Key</h3>
+    <p>
+      StudyBot uses <strong>Google Gemini AI</strong> (free tier) for intelligent, context-aware tutoring.
+      Get your free key at
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener"
+         style="color:var(--accent)">aistudio.google.com</a>
+      and paste it below. Your key is stored locally and never sent to our servers.
+    </p>
+
+    <form id="apiKeyForm" novalidate>
+      <div class="form-group" style="margin-bottom:var(--space-lg)">
+        <label class="form-label" for="apiKeyInput">Gemini API Key</label>
+        <div class="input-wrapper">
+          <span class="input-icon" aria-hidden="true">🔑</span>
+          <input type="password" id="apiKeyInput" class="input-field"
+                 placeholder="AIza…" autocomplete="off" spellcheck="false" />
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">
+        Save API Key →
+      </button>
+    </form>
+
+    <p style="margin-top:var(--space-md);font-size:0.78rem;color:var(--text-muted);text-align:center">
+      🔒 Your key is stored only in your browser's localStorage.
+    </p>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/app.js"></script>
+<script src="data/courses.js"></script>
+<script src="js/learn.js"></script>
+
+<script>
+// ---- Post-init: wire up items that need state references ----
+document.addEventListener('DOMContentLoaded', () => {
+  const courseId = getParam('course') || 'aws';
+  const course   = COURSES[courseId];
+  if (!course) return;
+
+  // Topics count badge
+  const badge = document.getElementById('topicsCount');
+  if (badge) badge.textContent = course.subtopics.length + ' topics';
+
+  // Clear chat button
+  document.getElementById('clearChatBtn')?.addEventListener('click', () => {
+    const messages = document.getElementById('chatMessages');
+    messages.innerHTML = '';
+    showToast('Chat cleared', 'info', 2000);
+  });
+
+  // Keyboard shortcut: Ctrl+/ opens API modal
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+      e.preventDefault();
+      document.getElementById('apiModal')?.classList.toggle('open');
+    }
+  });
+
+  // Focus chat input shortcut (press C when not in input)
+  document.addEventListener('keydown', (e) => {
+    const tag = document.activeElement?.tagName;
+    if (e.key === 'c' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      document.getElementById('chatInput')?.focus();
+    }
+  });
+});
+</script>
+
+</body>
+</html>

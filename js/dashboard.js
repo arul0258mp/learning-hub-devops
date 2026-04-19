@@ -1,0 +1,176 @@
+// ============================================================
+//  DASHBOARD.JS — Course selection, sidebar, progress
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!AuthState.requireAuth()) return;
+
+  const user = AuthState.getUser();
+  populateUserInfo(user);
+
+  // Sync all progress from backend before rendering
+  await Progress.syncAll();
+
+  renderCourseCards();
+  renderActivityFeed();
+  initSidebar();
+  initSearch();
+  initScrollAnimations();
+});
+
+// ---- User Info ----
+function populateUserInfo(user) {
+  const initials = getInitials(user.name);
+  document.querySelectorAll('.user-name-display').forEach(el => el.textContent = user.name);
+  document.querySelectorAll('.user-initials').forEach(el => el.textContent = initials);
+  document.getElementById('greetingName').textContent = getGreeting() + ', ' + user.name.split(' ')[0] + ' 👋';
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// ---- Render Course Cards ----
+function renderCourseCards() {
+  const grid = document.getElementById('coursesGrid');
+  if (!grid) return;
+
+  const courseList = Object.values(COURSES);
+  grid.innerHTML = courseList.map(course => {
+    const percent = Progress.getPercent(course.id, course.subtopics.length);
+    const diffClass = { 'Beginner': 'diff-beginner', 'Intermediate': 'diff-intermediate', 'Advanced': 'diff-advanced' }[course.difficulty] || 'diff-beginner';
+    const btnText = percent > 0 ? 'Continue' : 'Start Learning';
+
+    return `
+      <div class="course-card glass-card animate-on-scroll" data-course-id="${course.id}">
+        <div class="course-card-header">
+          <div class="course-icon-wrap" style="background:linear-gradient(135deg,${course.color}22,${course.color}44)">
+            ${course.emoji}
+          </div>
+          <span class="course-difficulty ${diffClass}">${course.difficulty}</span>
+        </div>
+        <h3>${course.title}</h3>
+        <p>${course.description}</p>
+        <div class="course-card-footer">
+          <div class="progress-info">
+            <span>Progress</span>
+            <span class="progress-pct">${percent}%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${percent}%"></div>
+          </div>
+          <div class="course-meta-row">
+            <span>⏱️ ${course.duration}</span>
+            <span>📚 ${course.topics} topics</span>
+            <button class="start-btn" data-course-id="${course.id}">${btnText} →</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Attach click handlers
+  grid.querySelectorAll('[data-course-id]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const courseId = el.closest('[data-course-id]')?.dataset.courseId || el.dataset.courseId;
+      if (courseId) goToCourse(courseId);
+    });
+  });
+
+  // Animate progress bars after render
+  setTimeout(() => {
+    grid.querySelectorAll('.progress-fill').forEach(bar => {
+      bar.style.transition = 'width 1s ease';
+    });
+    initScrollAnimations();
+  }, 100);
+}
+
+function goToCourse(courseId) {
+  window.location.href = `learn.html?course=${courseId}`;
+}
+
+// ---- Activity Feed ----
+function renderActivityFeed() {
+  const list = document.getElementById('activityList');
+  if (!list) return;
+
+  const activities = [
+    { icon: '📘', title: 'Completed: EC2 Basics', course: 'AWS Cloud', time: '2h ago' },
+    { icon: '🤖', title: 'AI Chat: Pointer questions', course: 'C Programming', time: 'Yesterday' },
+    { icon: '📊', title: 'Studied: Descriptive Stats', course: 'Data Analysis', time: '2 days ago' },
+    { icon: '🏆', title: 'Achievement: First Course Started!', course: '', time: '3 days ago' }
+  ];
+
+  const user = AuthState.getUser();
+  // Merge with any saved progress
+  const courseActivities = Object.values(COURSES).flatMap(c => {
+    const p = Progress.get(c.id);
+    return p.completed.map(topicId => {
+      const subtopic = c.subtopics.find(s => s.id === topicId);
+      return subtopic ? { icon: '✅', title: `Completed: ${subtopic.title}`, course: c.title, time: 'Recently' } : null;
+    }).filter(Boolean);
+  });
+
+  const allActivities = [...courseActivities.slice(0, 3), ...activities].slice(0, 6);
+
+  list.innerHTML = allActivities.map(a => `
+    <div class="activity-item animate-on-scroll">
+      <span class="activity-icon">${a.icon}</span>
+      <div class="activity-info">
+        <strong>${a.title}</strong>
+        ${a.course ? `<span>${a.course}</span>` : ''}
+      </div>
+      <span class="activity-time">${a.time}</span>
+    </div>
+  `).join('');
+
+  initScrollAnimations();
+}
+
+// ---- Sidebar ----
+function initSidebar() {
+  const sidebar = document.getElementById('dashSidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const menuToggle = document.getElementById('menuToggle');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  menuToggle?.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  });
+
+  logoutBtn?.addEventListener('click', () => {
+    showToast('Logged out. See you soon!', 'info');
+    setTimeout(() => AuthState.logout(), 800);
+  });
+
+  // Active nav item
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+}
+
+// ---- Search ----
+function initSearch() {
+  const input = document.getElementById('dashSearch');
+  if (!input) return;
+
+  input.addEventListener('input', debounce(() => {
+    const q = input.value.toLowerCase();
+    document.querySelectorAll('.course-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.style.display = q && !text.includes(q) ? 'none' : '';
+    });
+  }, 250));
+}
