@@ -125,6 +125,54 @@
           </div>
         </div>
       </section>
+      
+      <!-- Performance Analysis Section -->
+      <section aria-labelledby="performanceHeading" style="margin-top:var(--space-2xl)">
+        <div class="dash-section-header">
+          <h2 id="performanceHeading">📊 Performance Analysis</h2>
+          <p class="section-subtitle">Insights into your quiz scores and mastery.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="glass-card stat-card">
+            <div class="stat-icon" style="background:rgba(0,255,136,0.1);color:var(--accent)">🎯</div>
+            <div class="stat-info">
+              <span class="stat-label">Avg. Quiz Score</span>
+              <h3 class="stat-value" id="avgScore">0%</h3>
+            </div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-icon" style="background:rgba(0,204,255,0.1);color:#00ccff">🧠</div>
+            <div class="stat-info">
+              <span class="stat-label">Concepts Mastered</span>
+              <h3 class="stat-value" id="conceptsMastered">0</h3>
+            </div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-icon" style="background:rgba(168,85,247,0.1);color:#a855f7">⚡</div>
+            <div class="stat-info">
+              <span class="stat-label">Quizzes Taken</span>
+              <h3 class="stat-value" id="quizzesTaken">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-layout" style="display:grid; grid-template-columns: 1.5fr 1fr; gap:var(--space-lg); margin-top:var(--space-lg)">
+          <div class="glass-card chart-card" style="padding:var(--space-lg)">
+            <h4 style="margin-bottom:var(--space-md); font-size:0.9rem">Course Mastery</h4>
+            <div id="masteryBars" class="mastery-bars">
+               <div class="empty-state" style="color:var(--text-muted); font-size:0.8rem; text-align:center; padding:var(--space-xl)">Complete a quiz to see analysis.</div>
+            </div>
+          </div>
+
+          <div class="glass-card recent-activity-card" style="padding:var(--space-lg)">
+            <h4 style="margin-bottom:var(--space-md); font-size:0.9rem">Recent Quiz Results</h4>
+            <div id="recentQuizzes" class="recent-list">
+              <div class="empty-state" style="color:var(--text-muted); font-size:0.8rem; text-align:center; padding:var(--space-xl)">No quizzes yet.</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- Recent Activity -->
       <section aria-labelledby="activityHeading" style="margin-top:var(--space-2xl)">

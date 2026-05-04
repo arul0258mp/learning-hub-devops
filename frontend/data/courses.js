@@ -52,6 +52,23 @@ Key advantages include **Trade capital expense for variable expense**, **massive
             "What is the difference between IaaS, PaaS, and SaaS?",
             "Why should I choose AWS over other cloud providers?",
             "What does pay-as-you-go mean in practice?"
+          ],
+          quiz: [
+            {
+              question: "What is the primary benefit of Cloud Computing's 'pay-as-you-go' model?",
+              options: ["Unlimited free storage", "Trading capital expense for variable expense", "Physical ownership of servers", "No internet required"],
+              answer: 1
+            },
+            {
+              question: "Which cloud deployment model is operated exclusively for a single organization?",
+              options: ["Public Cloud", "Hybrid Cloud", "Private Cloud", "Community Cloud"],
+              answer: 2
+            },
+            {
+              question: "What is a key advantage of Cloud Computing mentioned in the text?",
+              options: ["Slower innovation", "Fixed resource allocation", "Go global in minutes", "Increased upfront costs"],
+              answer: 2
+            }
           ]
         }
       },
@@ -335,6 +352,23 @@ int main() {
             "What is the difference between C and C++?",
             "How do I install GCC on Windows?",
             "What does #include do in C?"
+          ],
+          quiz: [
+            {
+              question: "Who created the C programming language?",
+              options: ["Bill Gates", "Dennis Ritchie", "James Gosling", "Bjarne Stroustrup"],
+              answer: 1
+            },
+            {
+              question: "Every C program must have exactly one _____ function.",
+              options: ["start()", "init()", "main()", "execute()"],
+              answer: 2
+            },
+            {
+              question: "What preprocessor directive is used to include the Standard Input/Output header?",
+              options: ["#import <stdio.h>", "#include <stdio.h>", "#define stdio.h", "#using stdio.h"],
+              answer: 1
+            }
           ]
         }
       },
@@ -626,6 +660,23 @@ strcmp(name, "Alice");  // 0 if equal
             "What is the difference between EDA and data preprocessing?",
             "What are the most common Python libraries for data analysis?",
             "How do I start an EDA on a new dataset?"
+          ],
+          quiz: [
+            {
+              question: "What does EDA stand for in Data Analysis?",
+              options: ["Electronic Data Access", "Exploratory Data Analysis", "Efficient Data Aggregation", "Extended Data Archiving"],
+              answer: 1
+            },
+            {
+              question: "Which Python library is primarily used for DataFrame operations like loading and cleaning data?",
+              options: ["NumPy", "Matplotlib", "Seaborn", "Pandas"],
+              answer: 3
+            },
+            {
+              question: "What is the primary goal of EDA?",
+              options: ["To deploy machine learning models", "To summarize data characteristics using visual methods", "To encrypt sensitive data", "To increase database storage"],
+              answer: 1
+            }
           ]
         }
       },

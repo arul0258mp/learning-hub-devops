@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await Progress.syncAll();
 
   renderCourseCards();
+  renderPerformanceAnalytics();
   renderActivityFeed();
   initSidebar();
   initSearch();
@@ -178,10 +179,18 @@ function initSidebar() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } 
       else if (label.includes('my courses')) {
-        document.getElementById('coursesHeading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const target = document.getElementById('coursesHeading');
+        if (target) {
+          const offset = target.getBoundingClientRect().top + window.pageYOffset - 120;
+          window.scrollTo({ top: offset, behavior: 'smooth' });
+        }
       } 
       else if (label.includes('progress')) {
-        document.getElementById('activityHeading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const target = document.getElementById('activityHeading');
+        if (target) {
+          const offset = target.getBoundingClientRect().top + window.pageYOffset - 120;
+          window.scrollTo({ top: offset, behavior: 'smooth' });
+        }
       } 
       else if (label.includes('profile') || label.includes('settings')) {
         // Show a coming soon toast for account settings
@@ -208,3 +217,90 @@ function initSearch() {
     });
   }, 250));
 }
+
+// ---- Performance Analytics ----
+function renderPerformanceAnalytics() {
+  const statsKey = 'sb_quiz_stats';
+  const stats = JSON.parse(localStorage.getItem(statsKey) || '{}');
+  
+  const avgEl = document.getElementById('avgScore');
+  const masteryEl = document.getElementById('conceptsMastered');
+  const countEl = document.getElementById('quizzesTaken');
+  const barsEl = document.getElementById('masteryBars');
+  const recentEl = document.getElementById('recentQuizzes');
+
+  if (!avgEl) return;
+
+  let totalScore = 0;
+  let totalQuizzes = 0;
+  let masteredCount = 0;
+  let allQuizData = [];
+
+  // Aggregate stats
+  Object.keys(stats).forEach(courseId => {
+    Object.keys(stats[courseId]).forEach(subtopicId => {
+      const q = stats[courseId][subtopicId];
+      const pct = (q.score / q.total) * 100;
+      totalScore += pct;
+      totalQuizzes++;
+      if (pct >= 80) masteredCount++;
+      
+      const courseObj = COURSES[courseId];
+      const subtopicObj = courseObj?.subtopics.find(s => s.id === subtopicId);
+      
+      allQuizData.push({
+        name: subtopicObj?.title || subtopicId,
+        course: courseObj?.title || courseId,
+        score: Math.round(pct),
+        date: new Date(q.date)
+      });
+    });
+  });
+
+  // Update Summary Stats
+  const finalAvg = totalQuizzes > 0 ? Math.round(totalScore / totalQuizzes) : 0;
+  avgEl.textContent = finalAvg + '%';
+  masteryEl.textContent = masteredCount;
+  countEl.textContent = totalQuizzes;
+
+  if (totalQuizzes === 0) return;
+
+  // Render Mastery Bars (Course level)
+  let barsHTML = '';
+  Object.keys(COURSES).forEach(courseId => {
+    const course = COURSES[courseId];
+    const courseStats = stats[courseId] || {};
+    const subtopicsTaken = Object.keys(courseStats).length;
+    
+    let totalPct = 0;
+    Object.values(courseStats).forEach(s => totalPct += (s.score / s.total) * 100);
+    const avgPct = subtopicsTaken > 0 ? Math.round(totalPct / subtopicsTaken) : 0;
+
+    barsHTML += `
+      <div class="mastery-item">
+        <div class="mastery-info">
+          <span class="mastery-name">${course.title}</span>
+          <span class="mastery-val">${avgPct}% Mastery</span>
+        </div>
+        <div class="mastery-track">
+          <div class="mastery-fill" style="width:${avgPct}%; background:${course.color || 'var(--accent)'}"></div>
+        </div>
+      </div>
+    `;
+  });
+  barsEl.innerHTML = barsHTML;
+
+  // Render Recent Quizzes
+  allQuizData.sort((a, b) => b.date - a.date);
+  const recentHTML = allQuizData.slice(0, 4).map(q => `
+    <div class="recent-quiz-item">
+      <div class="recent-quiz-info">
+        <span class="recent-quiz-name">${q.name}</span>
+        <span class="recent-quiz-date">${q.course} • ${q.date.toLocaleDateString()}</span>
+      </div>
+      <div class="recent-quiz-score ${q.score < 60 ? 'low' : ''}">${q.score}%</div>
+    </div>
+  `).join('');
+  recentEl.innerHTML = recentHTML || '<div class="empty-state">No recent assessments.</div>';
+}
+

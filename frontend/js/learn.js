@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initApiModal();
   initNotes(state);
   initReadAloud();
+  initQuiz(state);
   updateProgressBar(state);
 
   // Check API key on load (check backend status first)
@@ -344,6 +345,19 @@ function loadContent(state) {
     bodyHTML += `<p>${formatted}</p>`;
   });
   document.getElementById('contentBody').innerHTML = bodyHTML;
+
+  // Add "Take Quiz" button if data exists
+  if (sub.quiz) {
+    const quizBtn = document.createElement('div');
+    quizBtn.className = 'start-quiz-btn animate-in';
+    quizBtn.innerHTML = `
+      <div class="icon">📝</div>
+      <div class="title">Test Your Knowledge</div>
+      <div class="desc">Take a quick 3-question quiz to lock in what you've learned.</div>
+    `;
+    quizBtn.onclick = () => openQuiz(state);
+    document.getElementById('contentBody').appendChild(quizBtn);
+  }
 
   // Key points
   document.getElementById('keyPointsList').innerHTML = c.keyPoints.map(
@@ -842,4 +856,125 @@ function initReadAloud() {
     btn.classList.add('reading');
     btn.innerHTML = '⏹ <span>Stop</span>';
   });
+}
+// ============================================================
+//  QUIZ SYSTEM
+// ============================================================
+function initQuiz(state) {
+  const modal = document.getElementById('quizModal');
+  const close = document.getElementById('quizModalClose');
+  const retry = document.getElementById('quizRetryBtn');
+  const finish = document.getElementById('quizFinishBtn');
+
+  close?.addEventListener('click', () => modal.classList.add('hidden'));
+  retry?.addEventListener('click', () => openQuiz(state));
+  finish?.addEventListener('click', () => modal.classList.add('hidden'));
+
+  state.quiz = {
+    currentIdx: 0,
+    score: 0,
+    active: false
+  };
+}
+
+function openQuiz(state) {
+  const sub = state.course.subtopics[state.currentSubtopicIndex];
+  if (!sub.quiz) return;
+
+  const modal = document.getElementById('quizModal');
+  const questionArea = document.getElementById('quizQuestionArea');
+  const resultArea = document.getElementById('quizResultArea');
+
+  state.quiz.currentIdx = 0;
+  state.quiz.score = 0;
+  state.quiz.active = true;
+
+  document.getElementById('quizSubtopicName').textContent = sub.title;
+  modal.classList.remove('hidden');
+  resultArea.classList.add('hidden');
+  questionArea.classList.remove('hidden');
+
+  renderQuestion(state);
+}
+
+function renderQuestion(state) {
+  const sub = state.course.subtopics[state.currentSubtopicIndex];
+  const q = sub.quiz[state.quiz.currentIdx];
+  const area = document.getElementById('quizQuestionArea');
+  const fill = document.getElementById('quizProgressFill');
+
+  fill.style.width = ((state.quiz.currentIdx / sub.quiz.length) * 100) + '%';
+
+  area.innerHTML = `
+    <h4>${q.question}</h4>
+    <div class="quiz-options">
+      ${q.options.map((opt, i) => `<button class="quiz-option" data-idx="${i}">${opt}</button>`).join('')}
+    </div>
+  `;
+
+  area.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.onclick = () => handleAnswer(parseInt(btn.dataset.idx), state);
+  });
+}
+
+async function handleAnswer(idx, state) {
+  const sub = state.course.subtopics[state.currentSubtopicIndex];
+  const q = sub.quiz[state.quiz.currentIdx];
+  const options = document.querySelectorAll('.quiz-option');
+
+  // Disable all options
+  options.forEach(btn => btn.style.pointerEvents = 'none');
+
+  if (idx === q.answer) {
+    state.quiz.score++;
+    options[idx].classList.add('correct');
+  } else {
+    options[idx].classList.add('wrong');
+    options[q.answer].classList.add('correct');
+  }
+
+  setTimeout(() => {
+    state.quiz.currentIdx++;
+    if (state.quiz.currentIdx < sub.quiz.length) {
+      renderQuestion(state);
+    } else {
+      showQuizResults(state);
+    }
+  }, 1200);
+}
+
+function showQuizResults(state) {
+  const sub = state.course.subtopics[state.currentSubtopicIndex];
+  const score = state.quiz.score;
+  const total = sub.quiz.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('quizQuestionArea').classList.add('hidden');
+  document.getElementById('quizResultArea').classList.remove('hidden');
+  document.getElementById('quizProgressFill').style.width = '100%';
+
+  document.getElementById('quizScorePct').textContent = pct + '%';
+  document.getElementById('quizStats').textContent = `You got ${score} out of ${total} correct.`;
+  
+  const verdicts = {
+    100: "Perfect Score! 🏆",
+    80: "Great Job! 🌟",
+    60: "Well Done! 👍",
+    0: "Keep Practicing! 📚"
+  };
+  const verdictKey = Object.keys(verdicts).reverse().find(k => pct >= k);
+  document.getElementById('quizVerdict').textContent = verdicts[verdictKey];
+
+  // Save to stats
+  saveQuizStats(state.course.id, sub.id, score, total);
+}
+
+function saveQuizStats(courseId, subtopicId, score, total) {
+  const key = 'sb_quiz_stats';
+  const stats = JSON.parse(localStorage.getItem(key) || '{}');
+  
+  if (!stats[courseId]) stats[courseId] = {};
+  stats[courseId][subtopicId] = { score, total, date: new Date().toISOString() };
+  
+  localStorage.setItem(key, JSON.stringify(stats));
 }

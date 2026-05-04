@@ -493,6 +493,60 @@
 .activity-info span { color: var(--text-muted); font-size: 0.78rem; }
 .activity-time { color: var(--text-muted); font-size: 0.75rem; flex-shrink: 0; }
 
+/* ---- PERFORMANCE ANALYTICS ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+}
+.stat-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.stat-label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
+
+.mastery-bars { display: flex; flex-direction: column; gap: var(--space-lg); padding: var(--space-md) 0; }
+.mastery-item { margin-bottom: var(--space-md); }
+.mastery-info { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px; }
+.mastery-name { font-weight: 600; color: var(--text-secondary); }
+.mastery-track { height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+.mastery-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+
+.recent-quiz-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.recent-quiz-item:last-child { border-bottom: none; }
+.recent-quiz-info { flex: 1; min-width: 0; }
+.recent-quiz-name { font-size: 0.8rem; font-weight: 600; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); }
+.recent-quiz-date { font-size: 0.65rem; color: var(--text-muted); }
+.recent-quiz-score {
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(0,255,136,0.1);
+  color: var(--accent);
+}
+.recent-quiz-score.low { background: rgba(255,77,109,0.1); color: var(--error); }
+
+
 /* Responsive */
 @media (max-width: 1024px) {
   .navbar-search { width: 160px; }
