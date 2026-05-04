@@ -152,11 +152,39 @@ function initSidebar() {
     setTimeout(() => AuthState.logout(), 800);
   });
 
-  // Active nav item
+  // Active nav item and scroll routing
   document.querySelectorAll('.sidebar-nav-item').forEach(item => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (e) => {
+      // Set active state visually
       document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
       item.classList.add('active');
+
+      // Close sidebar on mobile after clicking
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+      }
+
+      // Handle navigation logic
+      const label = item.textContent.trim().toLowerCase();
+      
+      if (label.includes('dashboard')) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } 
+      else if (label.includes('my courses')) {
+        document.getElementById('coursesHeading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } 
+      else if (label.includes('progress')) {
+        document.getElementById('activityHeading')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } 
+      else if (label.includes('profile') || label.includes('settings')) {
+        // Show a coming soon toast for account settings
+        if (typeof showToast === 'function') {
+          showToast(`The ${label.split(' ')[0]} feature is coming soon!`, 'info');
+        } else {
+          alert(`The ${label.split(' ')[0]} feature is coming soon!`);
+        }
+      }
     });
   });
 }
