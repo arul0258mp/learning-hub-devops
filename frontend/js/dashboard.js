@@ -259,7 +259,12 @@ function renderPerformanceAnalytics() {
 
   // Update Summary Stats
   const finalAvg = totalQuizzes > 0 ? Math.round(totalScore / totalQuizzes) : 0;
-  avgEl.textContent = finalAvg + '%';
+  
+  const textEl = document.getElementById('avgScoreText');
+  const circleEl = document.getElementById('avgScoreCircle');
+  if (textEl) textEl.textContent = finalAvg + '%';
+  if (circleEl) circleEl.setAttribute('stroke-dasharray', `${finalAvg}, 100`);
+
   masteryEl.textContent = masteredCount;
   countEl.textContent = totalQuizzes;
 

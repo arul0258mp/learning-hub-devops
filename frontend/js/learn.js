@@ -347,7 +347,7 @@ function loadContent(state) {
   document.getElementById('contentBody').innerHTML = bodyHTML;
 
   // Add "Take Quiz" button if data exists
-  if (sub.quiz) {
+  if (sub.content.quiz) {
     const quizBtn = document.createElement('div');
     quizBtn.className = 'start-quiz-btn animate-in';
     quizBtn.innerHTML = `
@@ -879,7 +879,7 @@ function initQuiz(state) {
 
 function openQuiz(state) {
   const sub = state.course.subtopics[state.currentSubtopicIndex];
-  if (!sub.quiz) return;
+  if (!sub.content.quiz) return;
 
   const modal = document.getElementById('quizModal');
   const questionArea = document.getElementById('quizQuestionArea');
@@ -899,11 +899,11 @@ function openQuiz(state) {
 
 function renderQuestion(state) {
   const sub = state.course.subtopics[state.currentSubtopicIndex];
-  const q = sub.quiz[state.quiz.currentIdx];
+  const q = sub.content.quiz[state.quiz.currentIdx];
   const area = document.getElementById('quizQuestionArea');
   const fill = document.getElementById('quizProgressFill');
 
-  fill.style.width = ((state.quiz.currentIdx / sub.quiz.length) * 100) + '%';
+  fill.style.width = ((state.quiz.currentIdx / sub.content.quiz.length) * 100) + '%';
 
   area.innerHTML = `
     <h4>${q.question}</h4>
@@ -919,7 +919,7 @@ function renderQuestion(state) {
 
 async function handleAnswer(idx, state) {
   const sub = state.course.subtopics[state.currentSubtopicIndex];
-  const q = sub.quiz[state.quiz.currentIdx];
+  const q = sub.content.quiz[state.quiz.currentIdx];
   const options = document.querySelectorAll('.quiz-option');
 
   // Disable all options
@@ -935,7 +935,7 @@ async function handleAnswer(idx, state) {
 
   setTimeout(() => {
     state.quiz.currentIdx++;
-    if (state.quiz.currentIdx < sub.quiz.length) {
+    if (state.quiz.currentIdx < sub.content.quiz.length) {
       renderQuestion(state);
     } else {
       showQuizResults(state);
@@ -946,7 +946,7 @@ async function handleAnswer(idx, state) {
 function showQuizResults(state) {
   const sub = state.course.subtopics[state.currentSubtopicIndex];
   const score = state.quiz.score;
-  const total = sub.quiz.length;
+  const total = sub.content.quiz.length;
   const pct = Math.round((score / total) * 100);
 
   document.getElementById('quizQuestionArea').classList.add('hidden');
