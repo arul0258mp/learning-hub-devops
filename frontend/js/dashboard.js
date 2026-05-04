@@ -139,8 +139,14 @@ function initSidebar() {
   const logoutBtn = document.getElementById('logoutBtn');
 
   menuToggle?.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('open');
+    if (window.innerWidth <= 768) {
+      // Mobile behavior: slide in/out
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+    } else {
+      // Desktop behavior: collapse/expand
+      sidebar.classList.toggle('collapsed');
+    }
   });
   overlay?.addEventListener('click', () => {
     sidebar.classList.remove('open');
