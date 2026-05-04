@@ -9,11 +9,8 @@ RUN cd backend && npm install
 # Copy backend
 COPY backend ./backend
 
-# Copy frontend files (root HTML + assets)
-COPY *.html ./
-COPY css ./css
-COPY js ./js
-COPY data ./data
+# Copy frontend files
+COPY frontend ./frontend
 
 EXPOSE 3001
 

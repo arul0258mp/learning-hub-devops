@@ -43,7 +43,7 @@ if (process.env.NODE_ENV !== 'production') {
 //  Serve frontend static files
 //  When you open http://localhost:3001 it serves your HTML app
 // ============================================================
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 // ============================================================
 //  API Routes
@@ -68,7 +68,7 @@ app.get('/api/health', (_req, res) => {
 // ---- Catch-all: serve index.html for any non-API route ----
 app.get('*', (req, res) => {
   if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '..', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
   } else {
     res.status(404).json({ error: 'API endpoint not found.' });
   }
