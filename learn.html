@@ -59,12 +59,24 @@
       </div>
     </div>
 
+    <!-- Progress indicator -->
+    <div class="topbar-progress" id="topbarProgress" aria-label="Course progress">
+      <span class="progress-label" id="progressLabel">0 / 0</span>
+      <div class="progress-track"><div class="progress-track-fill" id="progressTrackFill"></div></div>
+    </div>
+
     <!-- Right actions -->
     <div class="topbar-right">
+      <button class="topbar-save" id="readAloudBtn" aria-label="Read content aloud" title="Read Aloud">
+        🔊 <span>Read</span>
+      </button>
+      <button class="topbar-save" id="notesBtn" aria-label="Open notes" title="My Notes">
+        📝 <span>Notes</span>
+      </button>
       <button class="topbar-save" id="saveBtn" aria-label="Save progress">
         💾 <span>Save</span>
       </button>
-      <button class="topbar-save" id="settingsBtn" aria-label="Configure AI key" title="Set Gemini API Key">
+      <button class="topbar-save" id="settingsBtn" aria-label="Configure AI key" title="Set Groq API Key">
         🔑 <span>API Key</span>
       </button>
       <div class="topbar-avatar" id="topbarAvatar" role="img" aria-label="User avatar">U</div>
@@ -184,7 +196,7 @@
           <div class="chatbot-name">StudyBot AI</div>
           <div class="chatbot-status">
             <div class="status-dot" aria-hidden="true"></div>
-            Context-aware · Gemini AI
+            Context-aware · Groq AI
           </div>
         </div>
         <button class="chatbot-context-btn" id="clearChatBtn" aria-label="Clear chat history" title="Clear conversation">
@@ -193,14 +205,14 @@
       </div>
 
       <!-- Context bar -->
-      <div class="chatbot-context-bar" role="status" aria-live="polite" aria-label="Current AI context">
+      <div class="chatbot-context-bar" id="chatContextBar" role="status" aria-live="polite" aria-label="Current AI context">
         📍 Context: <span id="chatContextSpan">Loading…</span>
       </div>
 
       <!-- API Key warning -->
       <div class="chatbot-api-warning hidden" id="apiWarning" role="alert" tabindex="0"
            title="Click to set up your API key">
-        ⚠️ No API key set — click here to add your Gemini key
+        ⚠️ No API key set — click here to add your Groq key
       </div>
 
       <!-- Messages -->
@@ -236,6 +248,23 @@
 
 </div><!-- /learn-page -->
 
+<!-- ===================== NOTES PANEL ===================== -->
+<div class="notes-overlay hidden" id="notesOverlay"></div>
+<aside class="notes-panel hidden" id="notesPanel" role="complementary" aria-label="Personal notes">
+  <div class="notes-header">
+    <div class="notes-title">📝 My Notes</div>
+    <div class="notes-topic" id="notesTopic">Current Topic</div>
+    <button class="notes-close" id="notesClose" aria-label="Close notes">✕</button>
+  </div>
+  <textarea class="notes-textarea" id="notesTextarea"
+    placeholder="Write your notes here… They are saved automatically per topic."
+    aria-label="Notes for current topic"></textarea>
+  <div class="notes-footer">
+    <span class="notes-saved" id="notesSavedIndicator">💾 Saved</span>
+    <button class="notes-clear-btn" id="notesClearBtn">Clear Notes</button>
+  </div>
+</aside>
+
 <!-- ========================================================
      API KEY MODAL
 ======================================================== -->
@@ -245,18 +274,18 @@
     <button class="api-modal-close" id="apiModalClose" aria-label="Close modal">✕</button>
 
     <div style="font-size:2rem;margin-bottom:var(--space-md)" aria-hidden="true">🔑</div>
-    <h3 id="apiModalTitle">Set Your Gemini API Key</h3>
+    <h3 id="apiModalTitle">Set Your Groq API Key</h3>
     <p>
-      StudyBot uses <strong>Google Gemini AI</strong> (free tier) for intelligent, context-aware tutoring.
+      StudyBot uses <strong>Groq AI</strong> (Llama 3.3) for intelligent, context-aware tutoring.
       Get your free key at
-      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener"
-         style="color:var(--accent)">aistudio.google.com</a>
+      <a href="https://console.groq.com/keys" target="_blank" rel="noopener"
+         style="color:var(--accent)">console.groq.com</a>
       and paste it below. Your key is stored locally and never sent to our servers.
     </p>
 
     <form id="apiKeyForm" novalidate>
       <div class="form-group" style="margin-bottom:var(--space-lg)">
-        <label class="form-label" for="apiKeyInput">Gemini API Key</label>
+        <label class="form-label" for="apiKeyInput">Groq API Key</label>
         <div class="input-wrapper">
           <span class="input-icon" aria-hidden="true">🔑</span>
           <input type="password" id="apiKeyInput" class="input-field"

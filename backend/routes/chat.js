@@ -1,35 +1,32 @@
 // ============================================================
-//  ROUTES/CHAT.JS — Gemini AI proxy
+//  ROUTES/CHAT.JS — Groq AI proxy
 //  Keeps your API key on the server, away from the browser.
 // ============================================================
 
 const express = require('express');
 const fetch   = require('node-fetch');
 
-const { verifyToken } = require('../middleware/auth');
+const { verifyToken }   = require('../middleware/auth');
+const { dailyRateLimit } = require('../middleware/rateLimit');
 
 const router      = express.Router();
-const GEMINI_URL  = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
 
 // ============================================================
 //  POST /api/chat
 //  Body: { message, course, subtopic }
-//  Proxies the request to Gemini using the server .env key.
-//  Returns: { text }
+//  Proxies the request to Groq using the server .env key.
+//  If no key is set, provides a Mock Demo response (limit 10/day).
 // ============================================================
-router.post('/', verifyToken, async (req, res) => {
+router.post('/', verifyToken, dailyRateLimit(10), async (req, res) => {
   const { message, course, subtopic } = req.body;
 
   if (!message || !message.trim())
     return res.status(400).json({ error: 'Message is required.' });
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-    // 503 tells the frontend to fall back to the user's client-side key
-    return res.status(503).json({
-      error: 'Server Gemini API key not configured. Set GEMINI_API_KEY in backend/.env, or enter your key in the UI.'
-    });
-  }
+  const apiKey = process.env.GROQ_API_KEY;
+  const model  = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+  const isMockMode = !apiKey || apiKey === 'your_groq_api_key_here';
 
   // ---- Build system prompt ----
   const courseName   = course   || 'the selected course';
@@ -40,39 +37,86 @@ router.post('/', verifyToken, async (req, res) => {
     `Explain concepts in simple, clear, beginner-friendly language. Use analogies when helpful. ` +
     `Format responses with clear structure. Use markdown-style formatting: **bold**, \`code\`, bullet points. ` +
     `Keep responses focused and educational. ` +
-    `If asked something outside the current topic, gently redirect to the course material.`;
+    `If asked something outside the current topic, gently redirect to the course material. ` +
+    `Current time: ${new Date().toLocaleString()}`;
 
+  // ---- Mock Mode Fallback ----
+  if (isMockMode) {
+    console.log(`[DEMO MODE] Processing message: "${message.substring(0, 40)}..."`);
+    
+    // Simulate a slight delay for realism
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    const remaining = res.getHeader('X-RateLimit-Remaining');
+    const mockText = `[DEMO MODE] 🤖 **Hello! I'm StudyBot (Groq Edition).**\n\n` +
+      `I see you're asking about **${subtopicName}** in the context of **${courseName}**.\n\n` +
+      `Since the server is currently in Demo Mode, I can't provide a real-time AI response for your specific question: _"${message}"_.\n\n` +
+      `**To unlock my full Groq potential:**\n` +
+      `1. Get a free API key at [console.groq.com](https://console.groq.com/keys)\n` +
+      `2. Add it to the \`backend/.env\` file as \`GROQ_API_KEY\`.\n\n` +
+      `*Remaining demo questions today: ${remaining}*`;
+    
+    return res.json({ text: mockText });
+  }
+
+  // ---- Real Groq Call (OpenAI-compatible) ----
   const payload = {
-    system_instruction: { parts: [{ text: systemPrompt }] },
-    contents:           [{ role: 'user', parts: [{ text: message.trim() }] }],
-    generationConfig:   { temperature: 0.7, maxOutputTokens: 1024 }
+    model: model,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: message.trim() }
+    ],
+    temperature: 0.7,
+    max_tokens: 1024
   };
 
   try {
-    const geminiRes = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25s timeout
+
+    const groqRes = await fetch(GROQ_URL, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
       body:    JSON.stringify(payload),
-      timeout: 30000   // 30 s timeout
+      signal:  controller.signal
     });
 
-    if (!geminiRes.ok) {
-      const errBody = await geminiRes.json().catch(() => ({}));
-      const errMsg  = errBody?.error?.message || `Gemini API error (${geminiRes.status})`;
-      console.error('Gemini error:', errMsg);
-      return res.status(geminiRes.status >= 500 ? 502 : geminiRes.status).json({ error: errMsg });
+    clearTimeout(timeoutId);
+
+    if (!groqRes.ok) {
+      const errBody = await groqRes.json().catch(() => ({}));
+      const errMsg  = errBody?.error?.message || `Groq API error (${groqRes.status})`;
+      console.error('[Groq API Error]', groqRes.status, errMsg);
+      
+      // Handle common Groq/OpenAI errors gracefully
+      if (groqRes.status === 429) {
+        return res.status(429).json({ error: 'Groq API rate limit reached. Please try again later.' });
+      }
+      if (groqRes.status === 401) {
+        return res.status(503).json({ error: 'Server Groq API key is invalid.' });
+      }
+
+      return res.status(groqRes.status >= 500 ? 502 : 400).json({ error: errMsg });
     }
 
-    const data = await geminiRes.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
-                 || 'Sorry, I could not generate a response.';
+    const data = await groqRes.json();
+    const text = data?.choices?.[0]?.message?.content
+                 || 'I processed your request but couldn\'t generate a specific answer. Could you try rephrasing?';
 
     res.json({ text });
 
   } catch (err) {
-    console.error('Chat proxy error:', err.message);
-    res.status(500).json({ error: 'Failed to reach Gemini API. Check server network connection.' });
+    if (err.name === 'AbortError') {
+      console.error('❌ [Timeout] Groq API took too long to respond.');
+      return res.status(504).json({ error: 'Groq AI took too long to respond. Please try again.' });
+    }
+    console.error('❌ [Groq Proxy Error]', err.message);
+    res.status(500).json({ error: 'Failed to reach Groq AI service. Please check your server connection.' });
   }
 });
 
 module.exports = router;
+

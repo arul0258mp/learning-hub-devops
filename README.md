@@ -1,14 +1,55 @@
-# Study Bot AI Assistant
+# Study Bot AI Assistant — Complete README
 
-A **production-grade, AI-powered learning web application** built with pure HTML, CSS, and JavaScript. No frameworks, no build tools — just open `index.html` in your browser.
+An **AI-powered learning platform** with structured courses, an intelligent chatbot tutor, progress tracking, personal notes, read aloud, and more.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Local)
 
-1. Open `c:\Users\arulp\Desktop\Learning Hub Bot\` in File Explorer
-2. Double-click **`index.html`** to launch
-3. Click **"Get Started"** → Sign Up → choose a course → start learning!
+### Option 1 — One Click (Windows)
+**Double-click `Start_StudyBot.bat`** — it installs dependencies and opens the browser automatically.
+
+### Option 2 — Manual
+```bash
+cd backend
+npm install
+node server.js
+```
+Then open **http://localhost:3001** in your browser.
+
+---
+
+## 🌐 Hosting on Railway (Free Domain)
+
+Deploy to get a live URL like `studybot-production.up.railway.app`:
+
+### Step 1 — Push to GitHub
+```bash
+git init
+git add .
+git commit -m "Study Bot AI — production ready"
+git remote add origin https://github.com/YOUR_USERNAME/studybot.git
+git push -u origin main
+```
+
+### Step 2 — Deploy on Railway
+1. Go to **[railway.app](https://railway.app)** → Sign in with GitHub
+2. Click **"New Project"** → **"Deploy from GitHub Repo"**
+3. Select your repository
+4. Railway auto-detects the `Dockerfile`
+5. Go to **"Variables"** tab and add:
+   | Variable | Value |
+   |---|---|
+   | `GROQ_API_KEY` | Your key from console.groq.com |
+   | `JWT_SECRET` | Any long random string |
+   | `NODE_ENV` | `production` |
+   | `FRONTEND_URL` | `*` |
+6. Click **"Deploy"** — you get a live HTTPS URL in ~2 minutes!
+
+### Step 3 — Get Your Domain
+Go to **Settings → Domains** in Railway to:
+- Use the free `*.up.railway.app` subdomain, or
+- Connect your own custom domain (e.g. `studybot.yourdomain.com`)
 
 ---
 
@@ -16,83 +57,88 @@ A **production-grade, AI-powered learning web application** built with pure HTML
 
 | File | URL | Description |
 |------|-----|-------------|
-| `index.html` | Landing | Hero, features, courses preview, footer |
-| `login.html` | Auth | Login / Sign Up with validation |
-| `dashboard.html` | Dashboard | Course selection + progress tracking |
-| `learn.html?course=aws` | Learning | Full AI learning interface |
+| `index.html` | `/` | Landing page |
+| `login.html` | `/login.html` | Auth (Login / Sign Up) |
+| `dashboard.html` | `/dashboard.html` | Course selection + progress |
+| `learn.html?course=aws` | `/learn.html?course=aws` | Full learning interface |
 
 ---
 
-## 🤖 AI Chatbot Setup (Gemini API)
+## 🤖 AI Chatbot
 
-The chatbot uses **Google Gemini 1.5 Flash** (free tier).
+Uses **Groq (Llama-3.3-70b)** — fast, free, and context-aware.
 
-1. Go to [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-2. Create a free API key
-3. In the learning interface, click **"🔑 API Key"** in the top bar
-4. Paste your key → Save
-
-Your key is stored **only in your browser's localStorage** — never sent anywhere else.
-
----
-
-## ⚡ Layout Modes (Learning Interface)
-
-| Toggle State | Mode | Layout |
-|---|---|---|
-| Subtopics ON + Chatbot ON | **Full Mode** | 20% Topics \| 50% Content \| 30% Chat |
-| Subtopics OFF + Chatbot OFF | **Focus Mode** | 100% Content (distraction-free) |
-| Subtopics OFF + Chatbot ON | **Chat Mode** | 65% Content \| 35% Chat |
-
----
-
-## 🎓 Courses Included
-
-- **☁️ AWS Cloud Fundamentals** — Intro to Cloud, EC2, S3, Lambda, IAM, VPC
-- **💻 C Programming Mastery** — Data types, Pointers, Arrays, Functions, Strings
-- **📊 Data Analysis & EDA** — EDA process, Stats, Visualization, Missing data, Outliers
-
----
-
-## 📂 File Structure
-
-```
-Learning Hub Bot/
-├── index.html          ← Landing page
-├── login.html          ← Authentication
-├── dashboard.html      ← Course selection
-├── learn.html          ← Learning interface (core)
-├── css/
-│   ├── design-system.css   ← Tokens, variables, utilities
-│   ├── landing.css
-│   ├── auth.css
-│   ├── dashboard.css
-│   └── learn.css
-├── js/
-│   ├── app.js          ← Toast, auth state, utilities
-│   ├── landing.js      ← Particles, navbar
-│   ├── auth.js         ← Login/signup validation
-│   ├── dashboard.js    ← Course cards, sidebar
-│   └── learn.js        ← Layout modes + Gemini AI
-└── data/
-    └── courses.js      ← All course content
-```
+The server uses the key from `backend/.env`. Users can also enter their own key via the 🔑 button.
 
 ---
 
 ## ✨ Features
 
-- Dark cyberpunk theme with neon green accents
-- Particle canvas animation on hero
-- Glassmorphism cards throughout
-- Form validation with inline error messages
-- Password strength meter
-- LocalStorage auth (no backend needed)
-- Progress tracking per course
-- 3 intelligent layout modes with smooth CSS transitions
-- Context-aware AI chatbot (knows your course + subtopic)
-- Suggested questions per topic
-- Prev/Next topic navigation
-- Mobile responsive (hamburger menu, mobile panels)
-- Toast notification system
-- Keyboard shortcuts: `C` to focus chat, `Ctrl+/` for API key modal
+| Feature | Description |
+|---|---|
+| 🤖 AI Chatbot | Context-aware Groq AI tutor |
+| 📝 Notes Panel | Per-topic personal notes (auto-saved) |
+| 🔊 Read Aloud | Text-to-speech for all content |
+| 📊 Progress Bar | Live topic X/N indicator in topbar |
+| 📋 Copy Code | One-click copy for all code blocks |
+| 🎛️ Layout Modes | Full / Focus / Chat modes |
+| 💾 Progress Tracking | Server-backed progress per course |
+| 🌐 3 Courses | AWS, C Programming, Data Analysis |
+| 📱 Mobile Ready | Responsive on all screen sizes |
+
+---
+
+## ⚡ Layout Modes
+
+| Mode | Panels |
+|---|---|
+| Full Mode | Topics + Content + Chat |
+| Focus Mode | Content only (distraction-free) |
+| Chat Mode | Content + Chat |
+
+---
+
+## 🎓 Courses
+
+- **☁️ AWS Cloud Fundamentals** — EC2, S3, Lambda, IAM, VPC
+- **💻 C Programming Mastery** — Data types, Pointers, Functions, Strings
+- **📊 Data Analysis & EDA** — Statistics, Visualization, Missing data
+
+---
+
+## 🔧 Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| "Cannot reach server" | Run `node backend/server.js` |
+| Chatbot not responding | Check `GROQ_API_KEY` in `backend/.env` |
+| Login not working | Try registering a new account |
+| Notes not saving | Check browser localStorage permissions |
+
+---
+
+## 📂 Project Structure
+
+```
+learning-hub-devops/
+├── Start_StudyBot.bat   ← One-click launcher (Windows)
+├── Dockerfile           ← Docker build
+├── railway.json         ← Railway deploy config
+├── docker-compose.yml   ← Docker Compose
+├── backend/
+│   ├── server.js        ← Express server
+│   ├── .env             ← API keys (never commit!)
+│   ├── .env.example     ← Template
+│   ├── routes/          ← auth, progress, chat
+│   └── middleware/      ← JWT, rate limiter
+├── css/                 ← Styles per page
+├── js/                  ← Scripts per page
+├── data/courses.js      ← All course content
+└── *.html               ← Pages
+```
+
+---
+
+## 🏆 Credits
+
+Built with ❤️, Node.js, Groq AI, and pure HTML/CSS/JS. No frontend framework needed.

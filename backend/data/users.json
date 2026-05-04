@@ -5,5 +5,26 @@
     "email": "student1@gmail.com",
     "passwordHash": "$2a$10$yn6yDs/C.TlMhLk5g1ptH.vrQs.A2KSdvTShnyC/ibheW0BMVI4vW",
     "createdAt": "2026-04-17T16:59:01.884Z"
+  },
+  {
+    "id": "mor738gco11ie",
+    "name": "Test User",
+    "email": "test@example.com",
+    "passwordHash": "$2a$10$4vTJs7g75m7ewjrMyInsneTrq2aKoJc3WFPtDe6OimQLm31Fo1NXe",
+    "createdAt": "2026-05-04T12:48:01.164Z"
+  },
+  {
+    "id": "mor7iu3ib2bjn",
+    "name": "Final Test",
+    "email": "final@test.com",
+    "passwordHash": "$2a$10$wBkYYKnWsfCWHS67BBQbhOLquZsNiYYTUazyjZULIhwGc/2JDTsW6",
+    "createdAt": "2026-05-04T13:00:09.054Z"
+  },
+  {
+    "id": "mor7kps0q0u3k",
+    "name": "Full Test",
+    "email": "fulltest@example.com",
+    "passwordHash": "$2a$10$2GzD8JUnmet99BYB5zcCdOpIAcCKoulmj.UvCtbhYOvzJ8PKDJ5BG",
+    "createdAt": "2026-05-04T13:01:36.768Z"
   }
 ]

@@ -37,9 +37,19 @@
 window.API = {
   // If running from file:// or a local dev server (Live Server, Vite, etc.), point to the local backend port.
   // Otherwise, use the relative path for Docker or production deployment.
-  BASE: (window.location.protocol === 'file:' || ['5500', '5501', '3000', '5173'].includes(window.location.port)) 
-    ? 'http://localhost:3001/api' 
-    : '/api',
+  BASE: (() => {
+    const isLocal = (window.location.protocol === 'file:' || 
+                     ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname) ||
+                     ['5500', '5501', '3000', '5173'].includes(window.location.port));
+    
+    // If we're on localhost but NOT on port 3001, point to 3001
+    if (isLocal && window.location.port !== '3001') {
+      return 'http://localhost:3001/api';
+    }
+    
+    // Otherwise use relative path (works for Docker/Production)
+    return '/api';
+  })(),
 
   getHeaders() {
     const token = localStorage.getItem('sb_token');
@@ -55,6 +65,14 @@ window.API = {
       if (body) opts.body = JSON.stringify(body);
       const res  = await fetch(this.BASE + endpoint, opts);
       const data = await res.json().catch(() => ({}));
+      
+      // Auto-logout if token is invalid or expired
+      if (res.status === 401 && !endpoint.includes('/auth/login')) {
+        console.warn('Session invalid or expired. Logging out.');
+        AuthState.logout();
+        return { ok: false, status: 401, data: { error: 'Session expired. Please log in again.' } };
+      }
+
       return { ok: res.ok, status: res.status, data };
     } catch (err) {
       console.warn('API request failed:', err.message);
@@ -64,7 +82,16 @@ window.API = {
 
   get(endpoint)           { return this.request('GET',    endpoint); },
   post(endpoint, body)    { return this.request('POST',   endpoint, body); },
-  delete(endpoint)        { return this.request('DELETE', endpoint); }
+  delete(endpoint)        { return this.request('DELETE', endpoint); },
+
+  async ping() {
+    try {
+      const res = await fetch(this.BASE + '/health');
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
 };
 
 // ============================================================
@@ -116,9 +143,9 @@ window.AuthState = {
 //  API Key Management (client-side fallback key)
 // ============================================================
 window.ApiKey = {
-  get()    { return localStorage.getItem('sb_gemini_key') || ''; },
-  set(key) { localStorage.setItem('sb_gemini_key', key); },
-  clear()  { localStorage.removeItem('sb_gemini_key'); }
+  get()    { return localStorage.getItem('sb_groq_key') || ''; },
+  set(key) { localStorage.setItem('sb_groq_key', key); },
+  clear()  { localStorage.removeItem('sb_groq_key'); }
 };
 
 // ============================================================

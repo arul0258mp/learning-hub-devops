@@ -1,6 +1,6 @@
 // ============================================================
 //  SERVER.JS — Study Bot AI Assistant Backend
-//  Express server: auth, progress, Gemini AI proxy
+//  Express server: auth, progress, Groq AI proxy
 // ============================================================
 
 require('dotenv').config();
@@ -52,12 +52,14 @@ app.use('/api/chat',     chatRoutes);
 
 // ---- Health check ----
 app.get('/api/health', (_req, res) => {
+  const hasGroqKey = !!process.env.GROQ_API_KEY &&
+                     process.env.GROQ_API_KEY !== 'your_groq_api_key_here';
+  
   res.json({
     status:    'ok',
     timestamp: new Date().toISOString(),
-    geminiKey: !!process.env.GEMINI_API_KEY &&
-               process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here'
-               ? 'configured' : 'not configured'
+    backend:   'running',
+    groqProxy: hasGroqKey ? 'active' : 'inactive'
   });
 });
 
@@ -92,13 +94,13 @@ app.listen(PORT, () => {
   console.log('╚══════════════════════════════════════════════╝');
   console.log('');
 
-  const hasGeminiKey = process.env.GEMINI_API_KEY &&
-                       process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here';
-  if (hasGeminiKey) {
-    console.log('✅ Gemini API key is configured (server-side proxy active)');
+  const hasGroqKey = process.env.GROQ_API_KEY &&
+                     process.env.GROQ_API_KEY !== 'your_groq_api_key_here';
+  if (hasGroqKey) {
+    console.log('✅ Groq API key is configured (server-side proxy active)');
   } else {
-    console.log('⚠️  Gemini API key NOT set — users will need to enter their own key in the UI.');
-    console.log('   Set GEMINI_API_KEY in backend/.env to enable server-side proxying.');
+    console.log('⚠️  Groq API key NOT set — users will need to enter their own key in the UI.');
+    console.log('   Set GROQ_API_KEY in backend/.env to enable server-side proxying.');
   }
   console.log('');
 });

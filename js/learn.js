@@ -1,10 +1,10 @@
 // ============================================================
-//  CHATBOT.JS — Gemini AI integration (server-proxied)
+//  CHATBOT.JS — Groq AI integration (server-proxied)
 // ============================================================
 
 window.Chatbot = (function () {
-  // Direct Gemini URL (used as fallback when server key is not set)
-  const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+  // Groq API (server-proxied)
+  const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
   let _context   = { course: '', subtopic: '' };
   let _isThinking = false;
@@ -18,28 +18,36 @@ window.Chatbot = (function () {
       `If asked something outside the current topic, gently redirect to the course material.`;
   }
 
-  // ---- Direct Gemini call (client key fallback) ----
+  // ---- Direct Groq call (client key fallback) ----
   async function sendDirect(message, apiKey) {
     const payload = {
-      system_instruction: { parts: [{ text: buildSystemPrompt() }] },
-      contents:           [{ role: 'user', parts: [{ text: message }] }],
-      generationConfig:   { temperature: 0.7, maxOutputTokens: 1024 }
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: buildSystemPrompt() },
+        { role: 'user', content: message }
+      ],
+      temperature: 0.7,
+      max_tokens: 1024
     };
     try {
-      const res = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+      const res = await fetch(GROQ_URL, {
+        method: 'POST', 
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
         body: JSON.stringify(payload)
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         const msg = err?.error?.message || `API Error ${res.status}`;
         _isThinking = false;
-        if (res.status === 400 && msg.toLowerCase().includes('api key'))
+        if (res.status === 401)
           return { error: 'invalid_key', message: msg };
         return { error: 'api_error', message: msg };
       }
       const data = await res.json();
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, no response generated.';
+      const text = data?.choices?.[0]?.message?.content || 'Sorry, no response generated.';
       _isThinking = false;
       return { success: true, text };
     } catch (err) {
@@ -54,14 +62,15 @@ window.Chatbot = (function () {
       _context = { course, subtopic };
       const bar  = document.getElementById('chatContextBar');
       const span = document.getElementById('chatContextSpan');
-      if (bar && span) span.textContent = `${course} › ${subtopic}`;
+      if (span) span.textContent = `${course} › ${subtopic}`;
+      if (bar)  bar.classList.remove('hidden');
     },
 
     async send(userMessage) {
       if (_isThinking) return;
       _isThinking = true;
 
-      // ---- 1. Try backend proxy (uses server .env GEMINI_API_KEY) ----
+      // ---- 1. Try backend proxy (uses server .env GROQ_API_KEY) ----
       try {
         const res = await API.post('/chat', {
           message:  userMessage,
@@ -90,8 +99,15 @@ window.Chatbot = (function () {
         // ---- 3. Backend unreachable → try client key ----
         const clientKey = ApiKey.get();
         if (clientKey) return await sendDirect(userMessage, clientKey);
+        
         _isThinking = false;
-        return { error: 'network_error', message: 'Cannot reach server. Is the backend running on port 3001?' };
+        return { 
+          error: 'network_error', 
+          message: 'Cannot reach the StudyBot server. <br><br>' +
+                   '<strong>How to fix:</strong><br>' +
+                   '1. Ensure the Node.js backend is running (<code>node backend/server.js</code>).<br>' +
+                   '2. Or, click the 🔑 icon above to enter your own Groq API key.'
+        };
       }
     }
   };
@@ -133,9 +149,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   initChatbotUI(state);
   applyLayout(state);
   initApiModal();
+  initNotes(state);
+  initReadAloud();
+  updateProgressBar(state);
 
-  // Check API key on load (fallback)
-  if (!ApiKey.get()) {
+  // Check API key on load (check backend status first)
+  const health = await API.get('/health');
+  const isServerKeyActive = health.ok && health.data.groqProxy === 'active';
+  
+  if (isServerKeyActive || ApiKey.get()) {
+    document.getElementById('apiWarning')?.classList.add('hidden');
+  } else {
     document.getElementById('apiWarning')?.classList.remove('hidden');
   }
 });
@@ -284,6 +308,7 @@ function fadeAndLoadContent(state) {
   setTimeout(() => {
     inner.classList.remove('fading');
     loadContent(state);
+    updateProgressBar(state);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 160);
 }
@@ -357,6 +382,14 @@ function loadContent(state) {
 
   // Add AI welcome message for new topic
   addWelcomeMessage(state);
+
+  // Inject copy buttons and stop any TTS
+  setTimeout(() => injectCopyCodeButtons(), 50);
+  if (window.speechSynthesis?.speaking) {
+    speechSynthesis.cancel();
+    const btn = document.getElementById('readAloudBtn');
+    if (btn) { btn.classList.remove('reading'); btn.innerHTML = '🔊 <span>Read</span>'; }
+  }
 }
 
 function escapeHtml(str) {
@@ -434,12 +467,7 @@ async function sendMessage(message, state) {
   // Show user message
   appendMessage('user', message);
 
-  // Check API key
-  if (!ApiKey.get()) {
-    appendMessage('ai', '⚠️ Please set up your Gemini API key to use the AI chatbot. Click the warning banner above or use the settings to add your key.');
-    document.getElementById('apiWarning')?.classList.remove('hidden');
-    return;
-  }
+  // (API warning is handled by Chatbot.send result or initial load)
 
   // Show typing indicator
   const typingId = showTyping();
@@ -449,20 +477,49 @@ async function sendMessage(message, state) {
   removeTyping(typingId);
 
   if (result.error) {
+    if (result.status === 401) {
+      appendMessage('ai', '❌ Session expired. Please refresh the page and log in again.');
+      return;
+    }
     if (result.error === 'no_key') {
-      appendMessage('ai', '⚠️ API key not configured. Click the key icon above to add your Gemini API key.');
+      appendMessage('ai', '⚠️ API key not configured. Click the key icon above to add your Groq API key.');
       document.getElementById('apiWarning')?.classList.remove('hidden');
     } else if (result.error === 'invalid_key') {
       appendMessage('ai', '❌ Invalid API key. Please check your key and try again.');
       ApiKey.clear();
       document.getElementById('apiWarning')?.classList.remove('hidden');
     } else {
-      appendMessage('ai', `❌ Error: ${result.message || 'Something went wrong. Please try again.'}`);
+      appendMessage('ai', `❌ Error: ${result.data?.error || result.error || 'Something went wrong.'}`);
     }
     return;
   }
 
   appendMessage('ai', result.text);
+
+  // Show follow-up hints after a short delay
+  setTimeout(() => {
+    const sub = state.course.subtopics[state.currentSubtopicIndex];
+    const hints = sub.content.suggestedQuestions.slice(0, 2);
+    
+    const hintContainer = document.createElement('div');
+    hintContainer.className = 'chat-followups animate-in';
+    hintContainer.innerHTML = `
+      <span class="followup-label">Follow-up:</span>
+      ${hints.map(q => `<button class="followup-btn">${q}</button>`).join('')}
+    `;
+    
+    const messages = document.getElementById('chatMessages');
+    messages.appendChild(hintContainer);
+    messages.scrollTop = messages.scrollHeight;
+
+    hintContainer.querySelectorAll('.followup-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        hintContainer.classList.add('fading-out');
+        setTimeout(() => hintContainer.remove(), 300);
+        sendMessage(btn.textContent, state);
+      });
+    });
+  }, 1000);
 }
 
 function appendMessage(role, text) {
@@ -543,7 +600,7 @@ function initApiModal() {
     ApiKey.set(key);
     modal.classList.remove('open');
     document.getElementById('apiWarning')?.classList.add('hidden');
-    showToast('API key saved! You can now chat with StudyBot 🤖', 'success');
+    showToast('API key saved! You can now chat with StudyBot (Groq) 🤖', 'success');
   });
 
   // Settings button in topbar
@@ -642,3 +699,147 @@ const _origDOMContentLoaded = document.addEventListener.bind(document);
     }, 200);
   });
 })();
+
+// ============================================================
+//  PROGRESS BAR (topbar)
+// ============================================================
+function updateProgressBar(state) {
+  const total   = state.course.subtopics.length;
+  const current = state.currentSubtopicIndex + 1;
+  const pct     = Math.round((current / total) * 100);
+
+  const label = document.getElementById('progressLabel');
+  const fill  = document.getElementById('progressTrackFill');
+  if (label) label.textContent = `${current} / ${total}`;
+  if (fill)  fill.style.width  = pct + '%';
+}
+
+// ============================================================
+//  NOTES PANEL
+// ============================================================
+function initNotes(state) {
+  const panel   = document.getElementById('notesPanel');
+  const overlay = document.getElementById('notesOverlay');
+  const textarea= document.getElementById('notesTextarea');
+  const closeBtn= document.getElementById('notesClose');
+  const clearBtn= document.getElementById('notesClearBtn');
+  const openBtn = document.getElementById('notesBtn');
+  const savedInd= document.getElementById('notesSavedIndicator');
+  const topicLbl= document.getElementById('notesTopic');
+
+  function noteKey() {
+    const sub = state.course.subtopics[state.currentSubtopicIndex];
+    return `sb_notes_${state.course.id}_${sub.id}`;
+  }
+
+  function openNotes() {
+    const sub = state.course.subtopics[state.currentSubtopicIndex];
+    if (topicLbl) topicLbl.textContent = sub.title;
+    if (textarea)  textarea.value = localStorage.getItem(noteKey()) || '';
+    panel?.classList.remove('hidden');
+    overlay?.classList.remove('hidden');
+    textarea?.focus();
+  }
+
+  function closeNotes() {
+    panel?.classList.add('hidden');
+    overlay?.classList.add('hidden');
+  }
+
+  openBtn?.addEventListener('click', openNotes);
+  closeBtn?.addEventListener('click', closeNotes);
+  overlay?.addEventListener('click', closeNotes);
+
+  // Auto-save on typing
+  let saveTimer;
+  textarea?.addEventListener('input', () => {
+    clearTimeout(saveTimer);
+    if (savedInd) savedInd.classList.remove('visible');
+    saveTimer = setTimeout(() => {
+      localStorage.setItem(noteKey(), textarea.value);
+      if (savedInd) {
+        savedInd.classList.add('visible');
+        setTimeout(() => savedInd.classList.remove('visible'), 2000);
+      }
+    }, 600);
+  });
+
+  clearBtn?.addEventListener('click', () => {
+    if (textarea) textarea.value = '';
+    localStorage.removeItem(noteKey());
+    showToast('Notes cleared', 'info', 2000);
+  });
+}
+
+// ============================================================
+//  COPY CODE BUTTONS (injected after content renders)
+// ============================================================
+function injectCopyCodeButtons() {
+  document.querySelectorAll('.content-body pre').forEach(pre => {
+    if (pre.closest('.code-block-wrapper')) return; // already wrapped
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block-wrapper';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
+
+    const btn = document.createElement('button');
+    btn.className = 'copy-code-btn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy code');
+    wrapper.appendChild(btn);
+
+    btn.addEventListener('click', () => {
+      const code = pre.querySelector('code')?.textContent || pre.textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+  });
+}
+
+// ============================================================
+//  READ ALOUD (Text-to-Speech)
+// ============================================================
+let _ttsUtterance = null;
+
+function initReadAloud() {
+  const btn = document.getElementById('readAloudBtn');
+  if (!btn || !window.speechSynthesis) {
+    btn?.remove();
+    return;
+  }
+
+  btn.addEventListener('click', () => {
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+      btn.classList.remove('reading');
+      btn.innerHTML = '🔊 <span>Read</span>';
+      return;
+    }
+
+    const contentBody = document.getElementById('contentBody');
+    if (!contentBody) return;
+
+    const text = contentBody.innerText.replace(/\s+/g, ' ').trim();
+    if (!text) return;
+
+    _ttsUtterance = new SpeechSynthesisUtterance(text);
+    _ttsUtterance.rate  = 0.95;
+    _ttsUtterance.pitch = 1;
+    _ttsUtterance.lang  = 'en-US';
+
+    _ttsUtterance.onend = () => {
+      btn.classList.remove('reading');
+      btn.innerHTML = '🔊 <span>Read</span>';
+    };
+
+    speechSynthesis.speak(_ttsUtterance);
+    btn.classList.add('reading');
+    btn.innerHTML = '⏹ <span>Stop</span>';
+  });
+}

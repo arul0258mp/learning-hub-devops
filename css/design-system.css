@@ -16,9 +16,10 @@
   --border-accent: rgba(0,255,136,0.35);
 
   --accent:        #00ff88;
-  --accent-dim:    rgba(0,255,136,0.15);
-  --accent-glow:   rgba(0,255,136,0.35);
+  --accent-dim:    rgba(0,255,136,0.12);
+  --accent-glow:   rgba(0,255,136,0.4);
   --accent-dark:   #00cc6a;
+  --accent-secondary: #00d4ff;
 
   --text-primary:   #f0f0f8;
   --text-secondary: #9898b8;
@@ -87,16 +88,35 @@ ul { list-style: none; }
 /* Glassmorphism Card */
 .glass-card {
   background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  transition: var(--transition-base);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
+  );
+  transition: 0.5s;
+}
+.glass-card:hover::before {
+  left: 100%;
 }
 .glass-card:hover {
   background: var(--bg-card-hover);
   border-color: var(--border-accent);
   box-shadow: var(--shadow-md), var(--shadow-glow-sm);
+  transform: translateY(-4px);
 }
 
 /* Buttons */
@@ -114,14 +134,37 @@ ul { list-style: none; }
   white-space: nowrap;
 }
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
   color: #060610;
-  box-shadow: 0 0 20px rgba(0,255,136,0.3);
+  box-shadow: 0 4px 15px rgba(0,255,136,0.25);
+  position: relative;
+  overflow: hidden;
 }
 .btn-primary:hover {
-  background: #1affaa;
-  box-shadow: 0 0 32px rgba(0,255,136,0.5);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #1affaa 0%, #00e67a 100%);
+  box-shadow: 0 8px 25px rgba(0,255,136,0.4);
+  transform: translateY(-2px);
+}
+.btn-primary::after {
+  content: "";
+  background: rgba(255, 255, 255, 0.2);
+  display: block;
+  position: absolute;
+  border-radius: 50%;
+  padding-top: 240%;
+  padding-left: 240%;
+  margin-left: -120%;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s;
+}
+.btn-primary:active::after {
+  padding-top: 0;
+  padding-left: 0;
+  margin-left: 0;
+  margin-top: 0;
+  opacity: 1;
+  transition: 0s;
 }
 .btn-primary:active { transform: translateY(0); }
 .btn-outline {
