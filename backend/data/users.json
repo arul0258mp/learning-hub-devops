@@ -26,5 +26,12 @@
     "email": "fulltest@example.com",
     "passwordHash": "$2a$10$2GzD8JUnmet99BYB5zcCdOpIAcCKoulmj.UvCtbhYOvzJ8PKDJ5BG",
     "createdAt": "2026-05-04T13:01:36.768Z"
+  },
+  {
+    "id": "mor9epgnz1wwi",
+    "name": "Student 1",
+    "email": "s1@gmail.com",
+    "passwordHash": "$2a$10$a8KEGm2BoGZ5pKaZsQuP5urWrIiY2rWf/nTqAdlK/Mm/gvoUYAajS",
+    "createdAt": "2026-05-04T13:52:55.655Z"
   }
 ]
