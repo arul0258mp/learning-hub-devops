@@ -38,16 +38,31 @@ window.API = {
   // If running from file:// or a local dev server (Live Server, Vite, etc.), point to the local backend port.
   // Otherwise, use the relative path for Docker or production deployment.
   BASE: (() => {
-    const isLocal = (window.location.protocol === 'file:' || 
-                     ['localhost', '127.0.0.1', '0.0.0.0'].includes(window.location.hostname) ||
-                     ['5500', '5501', '3000', '5173'].includes(window.location.port));
-    
-    // If we're on localhost but NOT on port 3001, point to 3001
-    if (isLocal && window.location.port !== '3001') {
+    const proto    = window.location.protocol;
+    const hostname = window.location.hostname;
+    const port     = window.location.port;
+
+    // Netlify deployment — functions live at /.netlify/functions/api
+    if (hostname.includes('netlify.app') || hostname.includes('netlify.com')) {
+      return '/.netlify/functions/api/api';
+    }
+
+    // Vercel deployment — routes go to /api/
+    if (hostname.includes('vercel.app') || hostname.includes('.vercel.')) {
+      return '/api';
+    }
+
+    // Railway / Render / custom domain (production)
+    if (proto === 'https:') {
+      return '/api';
+    }
+
+    // Local dev file:// or Live Server ports → point to local backend
+    if (proto === 'file:' || ['5500','5501','5173','3000'].includes(port)) {
       return 'http://localhost:3001/api';
     }
-    
-    // Otherwise use relative path (works for Docker/Production)
+
+    // Already on port 3001 (our own backend)
     return '/api';
   })(),
 

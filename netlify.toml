@@ -1,0 +1,30 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  command = "cd backend && npm install"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect all /api/* calls to the serverless function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Serve index.html at root
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# SPA-style catch all for HTML pages
+[[redirects]]
+  from = "/*"
+  to = "/:splat"
+  status = 200
+
+[dev]
+  command = "node backend/server.js"
+  port = 3001
+  targetPort = 3001
