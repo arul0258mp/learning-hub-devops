@@ -114,6 +114,23 @@ Key advantages include **Trade capital expense for variable expense**, **massive
             "How do I choose the right EC2 instance type?",
             "What are Spot Instances and when should I use them?",
             "How does EC2 security work?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -159,6 +176,23 @@ Key advantages include **Trade capital expense for variable expense**, **massive
             "What is the difference between S3 storage classes?",
             "How do I make an S3 bucket public or private?",
             "Can S3 host a static website?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -202,6 +236,23 @@ Lambda automatically scales from a few requests per day to thousands per second.
             "What is a cold start in Lambda?",
             "How do I pass environment variables to a Lambda function?",
             "What's the difference between Lambda and EC2?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -243,6 +294,23 @@ Lambda automatically scales from a few requests per day to thousands per second.
             "What is the difference between an IAM user and a role?",
             "How do I apply the principle of least privilege in IAM?",
             "What is MFA and why is it important?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -288,6 +356,23 @@ Lambda automatically scales from a few requests per day to thousands per second.
             "What is the difference between a security group and a NACL?",
             "How do I set up a 3-tier architecture in a VPC?",
             "What is CIDR notation?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       }
@@ -420,6 +505,23 @@ int main() {
             "What happens when an integer overflows in C?",
             "What is the difference between float and double?",
             "How do I print different data types with printf?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -478,6 +580,23 @@ arr = NULL; // Prevent dangling pointer
             "What is a segmentation fault?",
             "What is the difference between malloc and calloc?",
             "What are pointer arithmetic rules in C?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -539,6 +658,23 @@ void counter() {
             "What is the difference between pass-by-value and pass-by-reference in C?",
             "How do I return multiple values from a C function?",
             "What is recursion? Show me an example."
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -598,6 +734,23 @@ strcmp(name, "Alice");  // 0 if equal
             "What is a buffer overflow in C?",
             "How do I reverse a string in C?",
             "What is the difference between char[] and char*?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       }
@@ -729,6 +882,23 @@ df.describe()  # count, mean, std, min, 25%, 50%, 75%, max
             "What is the difference between variance and standard deviation?",
             "How do I detect outliers using the IQR method?",
             "What does a skewed distribution mean for my analysis?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -795,6 +965,23 @@ plt.show()
             "How do I create a heatmap in Python?",
             "When should I use a box plot vs a violin plot?",
             "How do I interpret a correlation coefficient?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -848,6 +1035,23 @@ df[['age']] = imp.fit_transform(df[['age']])
             "Should I drop rows or impute missing values?",
             "What is the difference between MCAR, MAR, and MNAR?",
             "How do I visualize missing data patterns?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       },
@@ -901,6 +1105,23 @@ Never blindly remove outliers — they may represent the most interesting data p
             "What is the IQR method for outlier detection?",
             "Should I always remove outliers before building a model?",
             "How do I visualize outliers with a box plot?"
+          ],
+          quiz: [
+            {
+              question: "What is the key takeaway from this module?",
+              options: ["Keep practicing", "Read more docs", "Build projects", "All of the above"],
+              answer: 3
+            },
+            {
+              question: "How can you best apply this knowledge?",
+              options: ["By taking a break", "By implementing it in code", "By memorizing terms", "None of the above"],
+              answer: 1
+            },
+            {
+              question: "Why is this concept important?",
+              options: ["It saves time", "It optimizes performance", "It is fundamental to the architecture", "All of the above"],
+              answer: 3
+            }
           ]
         }
       }

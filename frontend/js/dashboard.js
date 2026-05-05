@@ -186,7 +186,7 @@ function initSidebar() {
         }
       } 
       else if (label.includes('progress')) {
-        const target = document.getElementById('activityHeading');
+        const target = document.getElementById('performanceHeading');
         if (target) {
           const offset = target.getBoundingClientRect().top + window.pageYOffset - 120;
           window.scrollTo({ top: offset, behavior: 'smooth' });
