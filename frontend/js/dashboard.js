@@ -244,13 +244,12 @@ function renderPerformanceAnalytics() {
   const statsKey = 'sb_quiz_stats';
   const stats = JSON.parse(localStorage.getItem(statsKey) || '{}');
   
-  const avgEl = document.getElementById('avgScore');
   const masteryEl = document.getElementById('conceptsMastered');
   const countEl = document.getElementById('quizzesTaken');
   const barsEl = document.getElementById('masteryBars');
   const recentEl = document.getElementById('recentQuizzes');
 
-  if (!avgEl) return;
+  if (!masteryEl) return;
 
   let totalScore = 0;
   let totalQuizzes = 0;
