@@ -155,8 +155,14 @@ function initSidebar() {
   });
 
   logoutBtn?.addEventListener('click', () => {
-    showToast('Logged out. See you soon!', 'info');
-    setTimeout(() => AuthState.logout(), 800);
+    const modal = document.getElementById('accountModal');
+    const user = AuthState.getUser();
+    if (modal && user) {
+      document.getElementById('accountModalTitle').textContent = user.name;
+      document.getElementById('accountEmail').textContent = user.email;
+      document.getElementById('accountAvatar').textContent = user.name.charAt(0).toUpperCase();
+      modal.classList.remove('hidden');
+    }
   });
 
   // Active nav item and scroll routing
@@ -192,17 +198,32 @@ function initSidebar() {
           window.scrollTo({ top: offset, behavior: 'smooth' });
         }
       } 
-      else if (label.includes('profile') || label.includes('settings')) {
-        // Show a coming soon toast for account settings
-        if (typeof showToast === 'function') {
-          showToast(`The ${label.split(' ')[0]} feature is coming soon!`, 'info');
-        } else {
-          alert(`The ${label.split(' ')[0]} feature is coming soon!`);
+      else if (label.includes('profile') || label.includes('settings') || label.includes('account')) {
+        const modal = document.getElementById('accountModal');
+        const user = AuthState.getUser();
+        if (modal && user) {
+          document.getElementById('accountModalTitle').textContent = user.name;
+          document.getElementById('accountEmail').textContent = user.email;
+          document.getElementById('accountAvatar').textContent = user.name.charAt(0).toUpperCase();
+          modal.classList.remove('hidden');
         }
       }
     });
   });
+
+  // Account Modal events
+  document.getElementById('accountModalClose')?.addEventListener('click', () => {
+    document.getElementById('accountModal').classList.add('hidden');
+  });
+  document.getElementById('accountModalOverlay')?.addEventListener('click', () => {
+    document.getElementById('accountModal').classList.add('hidden');
+  });
+  document.getElementById('accountLogoutBtn')?.addEventListener('click', () => {
+    showToast('Logged out. See you soon!', 'info');
+    setTimeout(() => AuthState.logout(), 800);
+  });
 }
+
 
 // ---- Search ----
 function initSearch() {

@@ -196,8 +196,30 @@
   </div><!-- /dashboard-main -->
 </div><!-- /dashboard-layout -->
 
+<!-- ========================================================
+     ACCOUNT MODAL
+======================================================== -->
+<div class="quiz-modal hidden" id="accountModal" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
+  <div class="quiz-modal-overlay" id="accountModalOverlay"></div>
+  <div class="glass-card quiz-modal-card" style="max-width: 400px; padding: var(--space-2xl);">
+    <button class="quiz-modal-close" id="accountModalClose" aria-label="Close modal">✕</button>
+    
+    <div style="text-align:center; margin-bottom:var(--space-xl)">
+      <div id="accountAvatar" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg, var(--accent), #00ccff);color:var(--bg-primary);display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:700;margin:0 auto var(--space-md);">S</div>
+      <h3 id="accountModalTitle" style="font-size:1.5rem">Your Profile</h3>
+      <p id="accountEmail" style="color:var(--text-muted);font-size:0.9rem">student@example.com</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+      <button class="btn btn-secondary" onclick="window.location.href='learn.html?course=aws'" style="width:100%;justify-content:center">Resume Learning</button>
+      <button class="btn btn-secondary" id="accountLogoutBtn" style="width:100%;justify-content:center;border-color:rgba(255,77,109,0.3);color:var(--error)">Log Out</button>
+    </div>
+  </div>
+</div>
+
 <script src="js/app.js"></script>
 <script src="data/courses.js"></script>
 <script src="js/dashboard.js"></script>
 </body>
 </html>
+

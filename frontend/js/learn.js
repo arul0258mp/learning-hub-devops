@@ -148,6 +148,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadContent(state);
   initChatbotUI(state);
   applyLayout(state);
+  // Make state global so inline onclick can access it
+  window._appState = state;
+
   initApiModal();
   initNotes(state);
   initReadAloud();
@@ -344,20 +347,18 @@ function loadContent(state) {
       .replace(/\n/g, '<br>');
     bodyHTML += `<p>${formatted}</p>`;
   });
-  document.getElementById('contentBody').innerHTML = bodyHTML;
-
   // Add "Take Quiz" button if data exists
   if (sub.content.quiz) {
-    const quizBtn = document.createElement('div');
-    quizBtn.className = 'start-quiz-btn animate-in';
-    quizBtn.innerHTML = `
-      <div class="icon">📝</div>
-      <div class="title">Test Your Knowledge</div>
-      <div class="desc">Take a quick 3-question quiz to lock in what you've learned.</div>
+    bodyHTML += `
+      <div class="start-quiz-btn animate-in" onclick="openQuiz(window._appState)">
+        <div class="icon">📝</div>
+        <div class="title">Test Your Knowledge</div>
+        <div class="desc">Take a quick 3-question quiz to lock in what you've learned.</div>
+      </div>
     `;
-    quizBtn.onclick = () => openQuiz(state);
-    document.getElementById('contentBody').appendChild(quizBtn);
   }
+
+  document.getElementById('contentBody').innerHTML = bodyHTML;
 
   // Key points
   document.getElementById('keyPointsList').innerHTML = c.keyPoints.map(
@@ -878,10 +879,17 @@ function initQuiz(state) {
 }
 
 function openQuiz(state) {
+  console.log("openQuiz called!");
   const sub = state.course.subtopics[state.currentSubtopicIndex];
-  if (!sub.content.quiz) return;
+  console.log("Subtopic:", sub);
+  if (!sub.content.quiz) {
+    console.log("No quiz data found for subtopic");
+    return;
+  }
 
   const modal = document.getElementById('quizModal');
+  console.log("Modal found:", !!modal);
+
   const questionArea = document.getElementById('quizQuestionArea');
   const resultArea = document.getElementById('quizResultArea');
 
