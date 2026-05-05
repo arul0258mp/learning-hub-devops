@@ -167,6 +167,12 @@ ul { list-style: none; }
   transition: 0s;
 }
 .btn-primary:active { transform: translateY(0); }
+
+/* Utilities */
+.hidden {
+  display: none !important;
+}
+
 .btn-outline {
   border: 1px solid var(--border-accent);
   color: var(--accent);

@@ -1190,7 +1190,7 @@
   padding: var(--space-md);
   transition: opacity 0.3s ease;
 }
-.quiz-modal.hidden { opacity: 0; pointer-events: none; }
+.quiz-modal.hidden { opacity: 0; pointer-events: none; display: flex !important; z-index: -1; }
 .quiz-modal-overlay {
   position: absolute;
   inset: 0;
